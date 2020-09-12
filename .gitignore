@@ -9,6 +9,12 @@ xcuserdata/
 *.xcscmblueprint
 *.xccheckout
 
+##Firebase
+GoogleService-Info.plist
+
+##FirebaseCloudMessaging
+CertificateSigningRequest.certSigningRequest
+
 ## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
 build/
 DerivedData/

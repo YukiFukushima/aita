@@ -1,0 +1,21 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'MIKKE' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for MIKKE
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'IQKeyboardManagerSwift'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
+  pod 'Firebase/Storage'
+  pod 'FirebaseUI/Storage'
+  pod 'Firebase/Core'
+  pod 'Firebase/Messaging'
+  pod 'RAMPaperSwitch'
+  pod 'IBAnimatable'
+  pod 'SwiftDate'
+end
