@@ -41,7 +41,11 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         self.setupNavigationBar()
         
         //タイトルを表示
-        self.title = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName+"のステータス"
+        if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName=="friend"{
+            self.title = getFriendNameOfFriendGroup(groupNumber:getCurrentGroupNumberFromTappedGroup())+"のステータス"
+        }else{
+            self.title = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName+"のステータス"
+        }
         
         //Swich操作した時のアクション関数
         self.paperSwitch.animationDidStartClosure = {(onAnimation: Bool) in
@@ -101,6 +105,23 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         let vc = TaskMikkeDetailStatusViewController()
         vc.currentGroupNo = getCurrentGroupNumberFromTappedGroup()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    //友達登録したときに出来る2人グループの時の相手の名前を取得する関数
+    func getFriendNameOfFriendGroup(groupNumber:Int)->String{
+        var resultFriendName:String = ""
+        
+        //2人だけなので自分以外の名前を出す
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo.count {
+            if UserInfoManager.sharedInstance.getCurrentUserID()==GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames{
+                //自分なのでNoAction
+            }else{
+                let friendNameId = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames
+                resultFriendName = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: friendNameId)
+            }
+        }
+        
+        return resultFriendName
     }
     
     /* TableViewCellを読み込む(登録する)関数 */

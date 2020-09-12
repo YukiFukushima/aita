@@ -10,6 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TaskMikkeDetailStatusViewController" customModule="MIKKE" customModuleProvider="target">
             <connections>
                 <outlet property="addFriendImage" destination="J37-KJ-3Qm" id="5Cr-oz-m2O"/>
+                <outlet property="addFriendLabel" destination="wXI-Eq-iuI" id="tRm-vV-cB2"/>
                 <outlet property="alwaysPushSettingUiSwitch" destination="bb7-zg-X0u" id="ojp-Uf-M7E"/>
                 <outlet property="deleteDetailStatusBtnState" destination="oe8-3K-CDl" id="vkN-eV-8as"/>
                 <outlet property="inputDetailStatus" destination="otU-Ki-vLl" id="iKF-9y-55S"/>
@@ -102,8 +103,8 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                         <action selector="deleteResultDetailStatus:" destination="-1" eventType="touchUpInside" id="azb-eo-4KX"/>
                     </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="友達を追加する" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXI-Eq-iuI">
-                    <rect key="frame" x="30" y="332" width="122" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="グループに加える人を選ぶ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXI-Eq-iuI">
+                    <rect key="frame" x="30" y="332" width="208" height="21"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>

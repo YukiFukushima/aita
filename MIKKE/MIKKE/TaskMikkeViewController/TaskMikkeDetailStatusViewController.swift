@@ -16,6 +16,7 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
     @IBOutlet weak var alwaysPushSettingUiSwitch: UISwitch!
     @IBOutlet weak var deleteDetailStatusBtnState: UIButton!
     @IBOutlet weak var addFriendImage: UIImageView!
+    @IBOutlet weak var addFriendLabel: UILabel!
     var currentGroupNo:Int = 0
     let db = Firestore.firestore()
     
@@ -46,8 +47,18 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
         self.tabBarController?.tabBar.isHidden = true
         
         //アイコン画像タップ時コール関数登録
-        addFriendImage.isUserInteractionEnabled = true
         addFriendImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
+        
+        //単独の友達としてのグループ登録時による切り替え
+        if GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).groupName=="friend"{
+            addFriendImage.image = nil
+            addFriendImage.isUserInteractionEnabled = false
+            addFriendLabel.textColor = .clear
+        }else{
+            addFriendImage.image = UIImage(systemName: "person.crop.circle.fill.badge.plus")
+            addFriendImage.isUserInteractionEnabled = true
+            addFriendLabel.textColor = .darkGray
+        }
         
         //タイトル設定
         self.title = "このグループでの設定"

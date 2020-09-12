@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseStorage
 
 class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UIGestureRecognizerDelegate, UserInfoDelegate {
 
@@ -73,8 +74,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GroupTableViewCell", for: indexPath)as!TaskGroupTableViewCell
         
-        /* グループイメージを表示 */
-        cell.groupImageView.image = UIImage(named: "aita")
+        /* グループイメージ(角丸調整) */
         cell.groupImageView.layer.cornerRadius = 25.0
         
         /* グループメンバー追加画像タップ時イベント設定 */
@@ -82,12 +82,55 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.addGroupMemberImageView.tag = indexPath.row
         cell.addGroupMemberImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
         
-        /* グループ名を表示 */
+        /* グループ名を表示・グループイメージを表示 */
         var groupId:String = ""
         let currentUserInfo:UserInfo = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID()
         groupId = currentUserInfo.groupIds[indexPath.row]
-        cell.groupLabel.text = GroupInfoManager.sharedInstance.getGroupNamgeAtRequestTaskId(reqTaskId: groupId)
+        
+        if GroupInfoManager.sharedInstance.getGroupNamgeAtRequestTaskId(reqTaskId: groupId)=="friend"{
+            //2人だけなので自分以外の名前を出す
+            cell.groupLabel.text = getFriendNameOfFriendGroup(groupId:groupId)
+            //cell.groupImageView.image = UIImage(named: "aita")
+            viewNameImage(reqUSerId:getFriendIdOfFriendGroup(groupId:groupId), currentUserImageView: cell.groupImageView)
+        }else{
+            cell.groupLabel.text = GroupInfoManager.sharedInstance.getGroupNamgeAtRequestTaskId(reqTaskId: groupId)
+            cell.groupImageView.image = UIImage(named: "aita")
+        }
+        
         return cell
+    }
+    
+    //友達登録したときに出来る2人グループの時の相手の名前を取得する関数
+    func getFriendIdOfFriendGroup(groupId:String)->String{
+        var resultFriendId:String = ""
+        
+        //2人だけなので自分以外の名前を出す
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo.count {
+            if UserInfoManager.sharedInstance.getCurrentUserID()==GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].groupMemberNames{
+                //自分なのでNoAction
+            }else{
+                resultFriendId = GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].groupMemberNames
+            }
+        }
+        
+        return resultFriendId
+    }
+    
+    //友達登録したときに出来る2人グループの時の相手の名前を取得する関数
+    func getFriendNameOfFriendGroup(groupId:String)->String{
+        var resultFriendName:String = ""
+        
+        //2人だけなので自分以外の名前を出す
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo.count {
+            if UserInfoManager.sharedInstance.getCurrentUserID()==GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].groupMemberNames{
+                //自分なのでNoAction
+            }else{
+                let friendNameId = GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].groupMemberNames
+                resultFriendName = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: friendNameId)
+            }
+        }
+        
+        return resultFriendName
     }
     
     /* グループメンバー追加画像がクリックされた時にCallされる関数 */
@@ -147,6 +190,21 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         if necessarySaveFirestore==true{
             saveUserInfoToFirestore()
         }
+    }
+    
+    // ユーザー画像の表示関数
+    func viewNameImage(reqUSerId:String, currentUserImageView: UIImageView){
+        let userRef = self.getRequestUserRef(userId:reqUSerId)
+        downloadFromCloudStorage(userRef:userRef, currentUserImageView:currentUserImageView)
+    }
+    
+    //CloudStorageからダウンロードしてくる関数
+    func downloadFromCloudStorage(userRef:StorageReference, currentUserImageView:UIImageView){
+        //placeholderの役割を果たす画像をセット
+        let placeholderImage = UIImage(systemName: "photo")
+        
+        //読み込み
+        currentUserImageView.sd_setImage(with: userRef, placeholderImage: placeholderImage)
     }
     
     //Firestoreへの保存

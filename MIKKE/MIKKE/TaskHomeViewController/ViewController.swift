@@ -92,7 +92,7 @@ class ViewController: UIViewController, UserInfoDelegate{
     func viewName(){
         let currentUserName = UserInfoManager.sharedInstance.getNameAtCurrentUserID()
         if currentUserName==""{
-            self.nameTextField.text = "名前がまだありません"
+            self.nameTextField.text = "名前未登録"
         }else{
             self.nameTextField.text = currentUserName
         }

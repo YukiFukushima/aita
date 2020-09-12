@@ -11,7 +11,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
-class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, UserInfoDelegate {
+class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, UserInfoDelegate, GroupInfoDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchResultLabel: UILabel!
@@ -22,12 +22,21 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
     let dispatchGroup = DispatchGroup()
     let dispatchQueue = DispatchQueue(label: "searchView", attributes: .concurrent)
     
+    //グループ候補格納変数
+    var groupCandidate = GroupInfo(taskId:"",
+                                   groupName:"",
+                                   GroupMemberNamesInfo:[],
+                                   groupMemberTalksInfo:[],
+                                   createdAt:Timestamp(date:Date()),
+                                   updatedAt:Timestamp(date:Date()))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         searchBar.delegate = self
         UserInfoManager.sharedInstance.delegate = self
+        GroupInfoManager.sharedInstance.delegate = self
         
         //画像の角丸具合の設定
         searchResultImageView.layer.cornerRadius = 50.0
@@ -52,6 +61,7 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         //タブを戻す
         self.tabBarController?.tabBar.isHidden = false
     }
+    
     /* タッチした時にキーボードを消す(UIViewControllerに用意されているメソッド) */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
@@ -182,6 +192,102 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         self.present(alertVC, animated: true, completion: nil)
     }
     
+    //既に2人組のグループとして存在しているか否か判定する関数
+    func isExistFriendGroup(friendUserId:String)->Bool{
+        var result:Bool = false
+        
+        //自分のカレントID取得
+        let currentUserId = UserInfoManager.sharedInstance.getCurrentUserID()
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount() {
+            //もしグループ名がfriendなら
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: i).groupName=="friend"{
+                let groupMemberOne = GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo[0].groupMemberNames
+                let groupMemberTwo = GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo[1].groupMemberNames
+                
+                if groupMemberOne==currentUserId
+                && groupMemberTwo==friendUserId{
+                    result = true
+                }else if groupMemberOne==friendUserId
+                &&       groupMemberTwo==currentUserId{
+                    result = true
+                }
+                
+                if result==true{
+                    break
+                }
+            }
+        }
+        
+        return result
+    }
+    
+    //グループ作成(自分と友人の2人で構成されるグループ)関数
+    func saveFriendGroupToFirestore(friendUserId:String){
+        //新しくタスクIDを取得
+        let taskId = db.collection("Groups").document().documentID
+        
+        groupCandidate.taskId = taskId              //taskID格納
+        groupCandidate.createdAt = Timestamp()      //作成日格納
+        groupCandidate.groupName = "friend"         //名前格納
+        
+        ////自分を格納
+        let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+        appendUserInfo.groupMemberNames = UserInfoManager.sharedInstance.getCurrentUserID()
+        groupCandidate.GroupMemberNamesInfo.append(appendUserInfo)
+        
+        //友達を格納
+        let appendUserFriendInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+        appendUserFriendInfo.groupMemberNames = friendUserId
+        groupCandidate.GroupMemberNamesInfo.append(appendUserFriendInfo)
+
+        groupCandidate.updatedAt = Timestamp()            //更新日格納
+        
+        //Firestore(GroupInfo)に保存
+        do{
+            //Firestoreに保存出来るように変換する
+            let encodeGroupInfo:[String:Any] = try Firestore.Encoder().encode(groupCandidate)
+            
+            //Firestore保存
+            db.collection("Groups").document(groupCandidate.taskId).setData(encodeGroupInfo)
+        }catch let error as NSError{
+            print("エラー\(error)")
+            self.showAlert(title:"エラー", message: "データの読み込みに失敗しました")
+        }
+    }
+    
+    //自分の友人を自分の情報に保存する関数
+    func saveFriendToFirestore(friendUserId:String){
+        //配列に保存
+        UserInfoManager.sharedInstance.appendFriendAtCurrentUserID(friendUserId:addFriendUserId)
+        
+        //Firebaseに保存
+        do{
+            //Firestoreに保存出来るように変換する
+            let encodeUserInfo:[String:Any] = try Firestore.Encoder().encode(UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID())
+            
+            //Firestoreに書き込み
+            db.collection("Users").document(UserInfoManager.sharedInstance.getTaskIdAtCurrentUserID()).setData(encodeUserInfo)
+            
+        }catch let error as NSError{
+            print("エラー\(error)")
+        }
+        
+        //追加完了メッセージ
+        searchResultLabel.text = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: addFriendUserId)+"を友達に追加しました"
+        
+        //ボタンを隠す
+        self.addFriendBtn.isHidden = true
+        
+        //サーチバーを隠す
+        self.searchBar.isHidden = true
+        
+        //HOME画面に遷移
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            self.tabBarController?.tabBar.isHidden = false                      //タブを戻す
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+    }
+    
     //友達リスト追加ボタン押下時関数
     @IBAction func tappedAddFriendListBtn(_ sender: Any) {
         var isCompletedAddFriend:Bool = false
@@ -196,6 +302,15 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         
         //友達が未登録なら
         if isCompletedAddFriend==false{
+            //友達と自分がまだグループ管理になっていないなら
+            if isExistFriendGroup(friendUserId:addFriendUserId)==false{
+                saveFriendGroupToFirestore(friendUserId:addFriendUserId)
+            }
+            
+            //友達を保存
+            saveFriendToFirestore(friendUserId:addFriendUserId)
+            
+            /*
             //配列に保存
             UserInfoManager.sharedInstance.appendFriendAtCurrentUserID(friendUserId:addFriendUserId)
             
@@ -222,8 +337,10 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
             
             //HOME画面に遷移
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+                self.tabBarController?.tabBar.isHidden = false                      //タブを戻す
                 self.navigationController?.popToRootViewController(animated: true)
             }
+            */
         }else{
             searchResultLabel.text = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: addFriendUserId)+"は登録済みです"
             

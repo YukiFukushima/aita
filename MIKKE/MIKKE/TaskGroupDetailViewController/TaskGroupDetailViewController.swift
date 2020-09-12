@@ -39,7 +39,11 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         // Do any additional setup after loading the view.
         
         //タイトル設定
-        self.title = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName
+        if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName=="friend"{
+            self.title = getFriendNameOfFriendGroup(groupNumber:getCurrentGroupNumberFromTappedGroup())
+        }else{
+            self.title = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupName
+        }
         
         //背景画像設定
         cofigureBackgroundImage()
@@ -143,6 +147,23 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     @objc func appMovedToBackground() {
         //print("バックグランド")
         self.view.endEditing(true)
+    }
+    
+    //友達登録したときに出来る2人グループの時の相手の名前を取得する関数
+    func getFriendNameOfFriendGroup(groupNumber:Int)->String{
+        var resultFriendName:String = ""
+        
+        //2人だけなので自分以外の名前を出す
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo.count {
+            if UserInfoManager.sharedInstance.getCurrentUserID()==GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames{
+                //自分なのでNoAction
+            }else{
+                let friendNameId = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames
+                resultFriendName = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: friendNameId)
+            }
+        }
+        
+        return resultFriendName
     }
     
     // 送信ボタン有効化関数
