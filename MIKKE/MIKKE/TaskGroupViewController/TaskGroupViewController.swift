@@ -11,7 +11,7 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
 
-class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UIGestureRecognizerDelegate, UserInfoDelegate {
+class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UserInfoDelegate {
 
     @IBOutlet weak var taskGroupTableView: UITableView!
     let db = Firestore.firestore()
@@ -32,7 +32,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     
     /* 再描画 */
     override func viewWillAppear(_ animated: Bool) {
-        readGroupInfoFromFirestore()                                                //グループを読み込んで再評価
+        observeRealTimeFirestore()                                                  //グループを読み込んで再評価&監視
         if UserGroupUpdateRepository.loadUserGroupUpdateDefaults()==true{           //新しいグループに招待されているなら
             UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: false)  //updateフラグを落とす
         }
@@ -78,11 +78,13 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.groupImageView.layer.cornerRadius = 25.0
         
         /* グループメンバー追加画像タップ時イベント設定 */
-        cell.addGroupMemberImageView.isUserInteractionEnabled = true
-        cell.addGroupMemberImageView.tag = indexPath.row
-        cell.addGroupMemberImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
+        cell.currentUserImage.layer.cornerRadius = 18
+        cell.currentUserImage.isUserInteractionEnabled = true
+        cell.currentUserImage.tag = indexPath.row
+        cell.currentUserImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
+        viewNameImage(reqUSerId:UserInfoManager.sharedInstance.getCurrentUserID(), currentUserImageView: cell.currentUserImage)
         
-        /* グループ名を表示・グループイメージを表示 */
+        /* グループ名を表示+グループイメージを表示 */
         var groupId:String = ""
         let currentUserInfo:UserInfo = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID()
         groupId = currentUserInfo.groupIds[indexPath.row]
@@ -97,7 +99,55 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.groupImageView.image = UIImage(named: "aita")
         }
         
+        //Freeのメンバーがいるか判定
+        if isExistFreeMember(groupId:groupId)==true{
+            cell.groupLabel.textColor = .systemTeal
+        }else{
+            cell.groupLabel.textColor = .darkGray
+        }
+        
+        //cell上の今のユーザーのステータス表示
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: indexPath.row))==true{
+            cell.userStatusLabel.text = "free"
+            cell.userStatusLabel.textColor = .systemTeal
+        }else{
+            cell.userStatusLabel.text = "busy"
+            cell.userStatusLabel.textColor = .darkGray
+        }
+        
+        /*
+        //cellに埋め込んだUISwitch
+        let switchView = UISwitch()
+        switchView.tag = indexPath.row
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: indexPath.row))==true{
+            switchView.setOn(true, animated: false)
+        }else{
+            switchView.setOn(false, animated: false)
+        }
+        switchView.addTarget(self, action: #selector(hundleSwitch), for: UIControl.Event.valueChanged)
+        cell.accessoryView = switchView
+        */
+        
         return cell
+    }
+    
+    //現在freeの人がいるかいないか判定する関数
+    func isExistFreeMember(groupId:String)->Bool{
+        var result:Bool = false
+        var checkMemberStatus:Bool = false
+        let currentUserId:String = UserInfoManager.sharedInstance.getCurrentUserID()
+        
+        //自分自身のステータスは比較対象から外す
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo.count {
+            checkMemberStatus = GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].status
+            if checkMemberStatus == true
+            && currentUserId != GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: groupId).GroupMemberNamesInfo[i].groupMemberNames{
+                result = true
+                break
+            }
+        }
+        
+        return result
     }
     
     //友達登録したときに出来る2人グループの時の相手の名前を取得する関数
@@ -137,6 +187,22 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     @objc func addGroupMemberImageViewTapped(sender:UITapGestureRecognizer){
         guard let inputRow=sender.view?.tag else {return}
         
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: false)
+        }else{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: true)
+        }
+        
+        //FireStoreに保存
+        saveGroupOfStatusToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        
+        //ステータスの変更をPush通知
+        pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        
+        //再描画
+        taskGroupTableView.reloadData()
+        
+        /*
         let vc = TaskMakeTableViewController()
         
         //グループID作成
@@ -145,6 +211,40 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         groupId = currentUserInfo.groupIds[inputRow]
         vc.requestGroupId = groupId
         navigationController?.pushViewController(vc, animated: true)
+        */
+    }
+    
+    //自分以外のユーザーで、ステータスがFreeの人にステータス変更を通知する
+    func pushStatusChangeToOtherUser(groupNo:Int){
+        var userStatus:Bool = false
+        var userAlwaysPushEnable:Bool = false
+        
+        /* 送信相手のステータスがFreeだったら、Push通知 */
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo.count {
+            userStatus = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].status
+            userAlwaysPushEnable = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].alwaysPushEnable
+            
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames == UserInfoManager.sharedInstance.getCurrentUserID(){
+                /* NoAction(自分には通知しない) */
+            }else if userStatus == false
+            &&       userAlwaysPushEnable == false{
+                /* NoAction(ステータスがBusy && 必ず通知する設定ではない人には通知しない) */
+            }else{
+                var userToken:String = ""
+                userToken = UserInfoManager.sharedInstance.getTokenAtRequestUserID(reqUserId:GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames)
+                
+                /* ForDebug *
+                print("userToken:")
+                print(userToken)
+                * EndForDebug */
+                
+                let sendTile:String = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).groupName
+                
+                SendMessage.sendMessageToUser(userIdToken: userToken,
+                                              title: sendTile,
+                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが変更されました！")
+            }
+        }
     }
     
     //GroupInfo内のグループメンバーとUserInfo内の確認済みグループメンバーを照合し、無ければ、新しいGrとして自分が入っているグループ群に加える
@@ -221,6 +321,44 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
+    //Firestoreでリアルタイム監視
+    func observeRealTimeFirestore(){
+        //監視(ステータスに変更があったのかを監視する)
+        //db.collection("Groups").whereField("status", isEqualTo: "true").addSnapshotListener{ querySnapshot, error in
+        //db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
+        db.collection("Groups").addSnapshotListener{ DocumentSnapshot, error in
+           
+            self.db.collection("Groups").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
+                //配列を全削除
+                GroupInfoManager.sharedInstance.groupInfo.removeAll()
+                
+                //再度読み直して配列に保存
+                if let err = err{
+                    print("エラー:\(err)")
+                }else{
+                    //取得したDocument群の1つ1つのDocumentについて処理をする
+                    for document in querySnapShot!.documents{
+                        //各DocumentからはDocumentIDとその中身のdataを取得できる
+                        /* print("\(document.documentID) => \(document.data())") */
+                        //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
+                        do {
+                            let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
+                            //変換に成功
+                            GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
+                            //GroupInfoManager.sharedInstance.groupInfo.insert(decodedTask, at: self.groupNumber)
+                        } catch let error as NSError{
+                            print("エラー:\(error)")
+                        }
+                    }
+                    
+                    //Talk情報の読み込み
+                    self.readTalksInfoFromFireStore()
+                }
+            }
+            
+        }
+    }
+    
     //Firestoreからのトーク情報の読み込み
     func readTalksInfoFromFireStore(){
         self.db.collection("Talks").order(by: "groupMemberTalksCreatedAt", descending: true).getDocuments { (querySnapShot, err) in
@@ -260,35 +398,26 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    //Firestoreからのデータ(Group情報)の読み込み
-    func readGroupInfoFromFirestore(){
-        db.collection("Groups").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
-            //配列を全削除
-            GroupInfoManager.sharedInstance.groupInfo.removeAll()
+    //Firestoreに保存する関数
+    func saveGroupOfStatusToFirestore(groupNo:Int){
+        //GroupのタスクIDを取得
+        let taskId = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).taskId
+        
+        //更新日を更新
+        GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).updatedAt = Timestamp()
+        
+        //Firestoreに保存1
+        do{
+            //Firestoreに保存出来るように変換する
+            let encodeGroupInfo:[String:Any] = try Firestore.Encoder().encode(GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo))
             
-            if let err = err{
-                print("エラー:\(err)")
-            }else{
-                //取得したDocument群の1つ1つのDocumentについて処理をする
-                for document in querySnapShot!.documents{
-                    //各DocumentからはDocumentIDとその中身のdataを取得できる
-                    /* print("\(document.documentID) => \(document.data())") */
-                    //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
-                    do {
-                        let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
-                        //変換に成功
-                        GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
-                    } catch let error as NSError{
-                        print("エラー:\(error)")
-                    }
-                }
-                
-                //トーク情報の読み込み
-                self.readTalksInfoFromFireStore()
-            }
+            //保存
+            db.collection("Groups").document(taskId).setData(encodeGroupInfo)
+            
+        }catch let error as NSError{
+            print("エラー\(error)")
         }
     }
-    
     /* Firestoreからの削除関数 */
     func deleteTaskFromFirestore(deleteGropuNum:Int){
         db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGropuNum).taskId).delete()
@@ -478,6 +607,22 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         if judegeSaveToFirebase==true{
             saveUserInfoToFirestore()
         }
+    }
+    */
+    
+    /*
+    //cellに埋め込んだUISwitch変化時のアクション関数
+    @objc func hundleSwitch(sender:UISwitch){
+        print("table row switch Changed \(sender.tag)")
+        if (sender as AnyObject).isOn{
+            print("isON")
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: sender.tag), status: true)
+        }else{
+            print("isOFF")
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: sender.tag), status: false)
+        }
+        
+        taskGroupTableView.reloadData()
     }
     */
     /* 以下、未使用関数群終わり */

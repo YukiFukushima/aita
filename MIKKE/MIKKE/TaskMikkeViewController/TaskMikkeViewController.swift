@@ -217,6 +217,21 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         return currentUserStatus
     }
     
+    // このグループ内の現在のユーザーIDのステータスを変更する関数
+    func setCurrentUserStatusInCurrentGroup(status:Bool){
+        var currentGroupNo:Int = 0
+        
+        //グループ番号取得
+        currentGroupNo = getCurrentGroupNumberFromTappedGroup()
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo.count{
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
+                GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo[i].status = status
+                break
+            }
+        }
+    }
+    
     // このグループ内の現在のユーザーIDの詳細ステータス(一言メッセージ)を取得する関数
     func getCurrentUserDetailStatusInCurrentGroup()->String{
         var currentGroupNo:Int = 0
@@ -233,21 +248,6 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         return currentUserDetailStatus
-    }
-    
-    // このグループ内の現在のユーザーIDのステータスを変更する関数
-    func setCurrentUserStatusInCurrentGroup(status:Bool){
-        var currentGroupNo:Int = 0
-        
-        //グループ番号取得
-        currentGroupNo = getCurrentGroupNumberFromTappedGroup()
-        
-        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo.count{
-            if GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
-                GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).GroupMemberNamesInfo[i].status = status
-                break
-            }
-        }
     }
     
     //CloudStorageからダウンロードしてくる関数
@@ -485,6 +485,7 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
     }
+    
     //話せる相手を見つけた時のボタン
     @IBAction func mikkeBtn(_ sender: Any) {
         let vc = TaskGroupDetailViewController()

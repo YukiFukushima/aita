@@ -20,7 +20,7 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
     var addFriendUserId:String = ""
     let db = Firestore.firestore()
     let dispatchGroup = DispatchGroup()
-    let dispatchQueue = DispatchQueue(label: "searchView", attributes: .concurrent)
+    let dispatchQueue1 = DispatchQueue(label: "searchView1", attributes: .concurrent)
     
     //グループ候補格納変数
     var groupCandidate = GroupInfo(taskId:"",
@@ -47,6 +47,7 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        self.searchBar.isHidden = true
         self.readUserInfoFromFirestore()
         self.searchResultLabel.text = "IDを入力して友達を探してみてください"
         self.addFriendBtn.isHidden = true
@@ -140,42 +141,71 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
     
     //Firestoreからのデータ(ユーザ情報)の読み込み
     func readUserInfoFromFirestore(){
-        //同期処理開始
-        dispatchGroup.enter()
-        
-        //print("UserSyncStart")
-        
-        dispatchQueue.async(group: dispatchGroup){
-            self.db.collection("Users").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
-                if let err = err{
-                    print("エラー:\(err)")
-                    self.showAlert(title: "読み込みに失敗しました", message: "アプリを立ち上げ直してください")
-                }else{
-                    /* ForDebug
-                     var i:Int = 0
-                     * ForDebugEnd */
-                    
-                    //取得したDocument群の1つ1つのDocumentについて処理をする
-                    for document in querySnapShot!.documents{
-                        //各DocumentからはDocumentIDとその中身のdataを取得できる
-                        print("\(document.documentID) => \(document.data())")
-                        //型をUserInfo型に変換
-                        do {
-                            let decodedTask = try Firestore.Decoder().decode(UserInfo.self, from: document.data())
-                            //変換に成功
-                            UserInfoManager.sharedInstance.appendUserLists(userInfo: decodedTask)
-                            
-                        } catch let error as NSError{
-                            print("エラー:\(error)")
-                            self.showAlert(title: "読み込みに失敗しました", message: "アプリを立ち上げ直してください")
-                        }
+        self.db.collection("Users").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
+            if let err = err{
+                print("エラー:\(err)")
+                self.showAlert(title: "読み込みに失敗しました", message: "アプリを立ち上げ直してください")
+            }else{
+                /* ForDebug
+                 var i:Int = 0
+                 * ForDebugEnd */
+                
+                //取得したDocument群の1つ1つのDocumentについて処理をする
+                for document in querySnapShot!.documents{
+                    //各DocumentからはDocumentIDとその中身のdataを取得できる
+                    print("\(document.documentID) => \(document.data())")
+                    //型をUserInfo型に変換
+                    do {
+                        let decodedTask = try Firestore.Decoder().decode(UserInfo.self, from: document.data())
+                        //変換に成功
+                        UserInfoManager.sharedInstance.appendUserLists(userInfo: decodedTask)
+                        
+                    } catch let error as NSError{
+                        print("エラー:\(error)")
+                        self.showAlert(title: "読み込みに失敗しました", message: "アプリを立ち上げ直してください")
                     }
-                    
-                    //print("UserSyncEnd")
-                    
-                    //同期処理終了
-                    self.dispatchGroup.leave()
                 }
+                
+                //ユーザー情報を読み込んだらサーチバーを有効にする
+                self.searchBar.isHidden = false
+            }
+        }
+    }
+    
+    //Firestoreからのデータ(会話グループ情報)の読み込み
+    func readGroupInfoFromFirestore(){
+        //Firebaseから読み込み
+        self.db.collection("Groups").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
+            //配列を全削除
+            GroupInfoManager.sharedInstance.groupInfo.removeAll()
+            
+            if let err = err{
+                print("エラー:\(err)")
+            }else{
+                //取得したDocument群の1つ1つのDocumentについて処理をする
+                for document in querySnapShot!.documents{
+                    //各DocumentからはDocumentIDとその中身のdataを取得できる
+                    /*print("\(document.documentID) => \(document.data())")*/
+                    //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
+                    do {
+                        let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
+                        //変換に成功
+                        GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
+                        
+                        //print("SyncGroupInfo")
+                        
+                    } catch let error as NSError{
+                        print("エラー:\(error)")
+                    }
+                }
+                //友達登録処理
+                //友達と自分がまだグループ管理になっていないならグループ管理に追加
+                if self.isExistFriendGroup(friendUserId:self.addFriendUserId)==false{
+                    self.saveFriendGroupToFirestore(friendUserId:self.addFriendUserId)
+                }
+                
+                //友達を保存
+                self.saveFriendToFirestore(friendUserId:self.addFriendUserId)
             }
         }
     }
@@ -302,45 +332,8 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         
         //友達が未登録なら
         if isCompletedAddFriend==false{
-            //友達と自分がまだグループ管理になっていないなら
-            if isExistFriendGroup(friendUserId:addFriendUserId)==false{
-                saveFriendGroupToFirestore(friendUserId:addFriendUserId)
-            }
-            
-            //友達を保存
-            saveFriendToFirestore(friendUserId:addFriendUserId)
-            
-            /*
-            //配列に保存
-            UserInfoManager.sharedInstance.appendFriendAtCurrentUserID(friendUserId:addFriendUserId)
-            
-            //Firebaseに保存
-            do{
-                //Firestoreに保存出来るように変換する
-                let encodeUserInfo:[String:Any] = try Firestore.Encoder().encode(UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID())
-                
-                //Firestoreに書き込み
-                db.collection("Users").document(UserInfoManager.sharedInstance.getTaskIdAtCurrentUserID()).setData(encodeUserInfo)
-                
-            }catch let error as NSError{
-                print("エラー\(error)")
-            }
-            
-            //追加完了メッセージ
-            searchResultLabel.text = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: addFriendUserId)+"を友達に追加しました"
-            
-            //ボタンを隠す
-            self.addFriendBtn.isHidden = true
-            
-            //サーチバーを隠す
-            self.searchBar.isHidden = true
-            
-            //HOME画面に遷移
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
-                self.tabBarController?.tabBar.isHidden = false                      //タブを戻す
-                self.navigationController?.popToRootViewController(animated: true)
-            }
-            */
+            //グループを読み込み最新状態にした上で、友達と自分がまだグループ管理になっていないか判断し、友達追加
+            readGroupInfoFromFirestore()
         }else{
             searchResultLabel.text = UserInfoManager.sharedInstance.getNameAtRequestUserID(reqUserId: addFriendUserId)+"は登録済みです"
             
@@ -362,7 +355,6 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
                 
                 //初期状態(ボタンを隠す)
                 self.addFriendBtn.isHidden = true
-                
             }
         }
     }

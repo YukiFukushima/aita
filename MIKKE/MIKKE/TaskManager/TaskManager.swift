@@ -430,6 +430,53 @@ class GroupInfoManager{
         }
     }
     
+    // タップされたindexPathから現在のグループ番号を取得する関数
+    func getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow:Int)->Int{
+        let detailedGroupId:String = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds[tappedIndexPathRow]
+        var resultGroupNo:Int = 0
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount() {
+            if detailedGroupId==GroupInfoManager.sharedInstance.getGroupInfo(num: i).taskId{
+                resultGroupNo = i
+                break
+            }
+        }
+        
+        return resultGroupNo
+    }
+    
+    // 引数でリクエストされたグループ内の現在のユーザーIDのステータスを取得する関数
+    func getCurrentUserStatusInReqGroup(reqGroupNo:Int)->Bool{
+        //var currentGroupNo:Int = 0
+        var currentUserStatus:Bool = false
+        
+        //グループ番号取得
+        //currentGroupNo = getCurrentGroupNumberFromTappedGroup()
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo.count{
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
+                currentUserStatus = GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo[i].status
+                break
+            }
+        }
+        
+        return currentUserStatus
+    }
+    
+    // 引数でリクエストされたグループ内の現在のユーザーIDのステータスを変更する関数
+    func setCurrentUserStatusInCurrentGroup(reqGroupNo:Int, status:Bool){
+        //var currentGroupNo:Int = 0
+        
+        //グループ番号取得
+        //currentGroupNo = getCurrentGroupNumberFromTappedGroup()
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo.count{
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
+                GroupInfoManager.sharedInstance.getGroupInfo(num: reqGroupNo).GroupMemberNamesInfo[i].status = status
+                break
+            }
+        }
+    }
+    
     /*
     /* グループリストを保存 */
     func saveGroupInfo(){

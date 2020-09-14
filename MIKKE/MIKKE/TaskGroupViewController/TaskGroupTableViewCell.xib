@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -24,42 +24,50 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OOV-d1-2Lq">
-                        <rect key="frame" x="95" y="30" width="300" height="21"/>
+                        <rect key="frame" x="95" y="30" width="150" height="21"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="300" id="nZM-fn-lgJ"/>
+                            <constraint firstAttribute="width" constant="150" id="0vN-mv-Ppo"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.badge.plus" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iwg-eb-rsD">
-                        <rect key="frame" x="407" y="43" width="30" height="29"/>
-                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="free" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wbu-18-MSu">
+                        <rect key="frame" x="403" y="91" width="36" height="16"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="30" id="1U9-3j-qpC"/>
-                            <constraint firstAttribute="height" constant="30" id="cp1-Vr-fvU"/>
+                            <constraint firstAttribute="width" constant="36" id="JwP-2I-3gg"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vs1-yl-YLh">
+                        <rect key="frame" x="403" y="19" width="36" height="36"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="36" id="ILh-lh-PfY"/>
+                            <constraint firstAttribute="width" constant="36" id="Ngp-sD-cQR"/>
                         </constraints>
                     </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="OOV-d1-2Lq" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="30" id="1BV-aW-4Xg"/>
                     <constraint firstItem="OOV-d1-2Lq" firstAttribute="leading" secondItem="6rl-P3-UY7" secondAttribute="trailing" constant="25" id="DIK-7g-1aI"/>
+                    <constraint firstAttribute="bottom" secondItem="wbu-18-MSu" secondAttribute="bottom" constant="8" id="Dp1-Ih-csC"/>
                     <constraint firstItem="6rl-P3-UY7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="GgR-g0-ehT"/>
                     <constraint firstItem="6rl-P3-UY7" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="K3k-dm-xwa"/>
-                    <constraint firstAttribute="trailing" secondItem="iwg-eb-rsD" secondAttribute="trailing" constant="15" id="gDb-gd-gkv"/>
-                    <constraint firstItem="iwg-eb-rsD" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="h69-zh-373"/>
+                    <constraint firstAttribute="trailing" secondItem="wbu-18-MSu" secondAttribute="trailing" constant="13" id="Yyq-Wf-shl"/>
+                    <constraint firstAttribute="trailing" secondItem="vs1-yl-YLh" secondAttribute="trailing" constant="13" id="o42-Zo-6x7"/>
+                    <constraint firstItem="vs1-yl-YLh" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="19" id="wCk-UD-Zsj"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="addGroupMemberImageView" destination="iwg-eb-rsD" id="848-1k-HzU"/>
+                <outlet property="currentUserImage" destination="vs1-yl-YLh" id="xdk-Cv-O2r"/>
                 <outlet property="groupImageView" destination="6rl-P3-UY7" id="upG-VT-3OM"/>
                 <outlet property="groupLabel" destination="OOV-d1-2Lq" id="okb-hH-HXE"/>
+                <outlet property="userStatusLabel" destination="wbu-18-MSu" id="Sjz-Bf-uY3"/>
             </connections>
-            <point key="canvasLocation" x="36.231884057971016" y="154.35267857142856"/>
+            <point key="canvasLocation" x="35.200000000000003" y="154.27286356821591"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="person.crop.circle.badge.plus" catalog="system" width="128" height="101"/>
-    </resources>
 </document>

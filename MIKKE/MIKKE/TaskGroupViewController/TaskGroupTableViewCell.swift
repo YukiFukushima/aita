@@ -12,8 +12,8 @@ class TaskGroupTableViewCell: UITableViewCell {
 
     @IBOutlet weak var groupImageView: UIImageView!
     @IBOutlet weak var groupLabel: UILabel!
-    @IBOutlet weak var addGroupMemberImageView: UIImageView!
-    
+    @IBOutlet weak var userStatusLabel: UILabel!
+    @IBOutlet weak var currentUserImage: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
