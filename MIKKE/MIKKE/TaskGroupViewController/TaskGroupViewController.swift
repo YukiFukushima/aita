@@ -27,7 +27,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         // Do any additional setup after loading the view.
         
         //タイトルを表示
-        self.title = "グループ"
+        self.title = "ともだち"
     }
     
     /* 再描画 */
@@ -46,6 +46,25 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         //restoreDataFromFirestore()            //自デバイスでグループを作って戻ってきた時のため
         self.taskGroupTableView.reloadData()    //自デバイスでグループを作って戻ってきた時のため
         */
+    }
+    
+    //友達が一人も登録されていないかどうか判定関数
+    func checkNoFriendAlert(){
+        if UserInfoManager.sharedInstance.getGroupIdsCountAtCurrentUserID()==0{
+            //UIAlertControllerを関数の引数であるとtitleとmessageを使ってインスタンス化
+            let alertVC = UIAlertController(title: "ともだちが未登録です", message: "\nホーム画面から\n友達を追加してみましょう！", preferredStyle: .alert)
+            
+            //UIAlertActionを追加
+            alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            /*
+            alertVC.addAction(UIAlertAction(title: "友達登録へ", style: .default, handler: { (action) in
+                self.registerFriend()
+            }))
+            */
+            
+            //表示
+            self.present(alertVC, animated: true, completion: nil)
+        }
     }
     
     /* TableViewCellを読み込む(登録する)関数 */
@@ -394,6 +413,9 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 //再描画
                 self.taskGroupTableView.reloadData()
+                
+                //友達が一人も登録されていないかチェック
+                self.checkNoFriendAlert()
             }
         }
     }
@@ -623,6 +645,14 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         taskGroupTableView.reloadData()
+    }
+    */
+    
+    //友達登録画面遷移関数
+    /*
+    func registerFriend(){
+        let vc = TaskAddFriendMethodViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
     */
     /* 以下、未使用関数群終わり */

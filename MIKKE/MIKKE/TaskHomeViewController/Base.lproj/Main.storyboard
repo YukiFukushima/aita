@@ -325,11 +325,11 @@
             </objects>
             <point key="canvasLocation" x="1042.0289855072465" y="120.53571428571428"/>
         </scene>
-        <!--グループ-->
+        <!--ともだち-->
         <scene sceneID="rCb-h9-7kz">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4yR-h9-HIZ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" tag="1" title="グループ" image="person.3" catalog="system" id="Ww1-gb-gvq"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="ともだち" image="person.3" catalog="system" id="Ww1-gb-gvq"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="r3Q-Nd-mgz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

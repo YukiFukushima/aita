@@ -39,6 +39,8 @@
 		3E5F61E824A3180C007181D0 /* TaskMakeTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5F61E624A3180C007181D0 /* TaskMakeTableViewController.xib */; };
 		3EA1CE7B24E8EE4900B2E4C7 /* TaskInitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA1CE7924E8EE4900B2E4C7 /* TaskInitViewController.swift */; };
 		3EA1CE7C24E8EE4900B2E4C7 /* TaskInitViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EA1CE7A24E8EE4900B2E4C7 /* TaskInitViewController.xib */; };
+		3ECC2D942510C44B003C9213 /* TaskTutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ECC2D922510C44B003C9213 /* TaskTutorialViewController.swift */; };
+		3ECC2D952510C44B003C9213 /* TaskTutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ECC2D932510C44B003C9213 /* TaskTutorialViewController.xib */; };
 		3ED1987924A1091D008A95CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED1987824A1091D008A95CB /* AppDelegate.swift */; };
 		3ED1987B24A1091D008A95CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED1987A24A1091D008A95CB /* SceneDelegate.swift */; };
 		3ED1987D24A1091D008A95CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED1987C24A1091D008A95CB /* ViewController.swift */; };
@@ -103,6 +105,8 @@
 		3E5F61E624A3180C007181D0 /* TaskMakeTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskMakeTableViewController.xib; sourceTree = "<group>"; };
 		3EA1CE7924E8EE4900B2E4C7 /* TaskInitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskInitViewController.swift; sourceTree = "<group>"; };
 		3EA1CE7A24E8EE4900B2E4C7 /* TaskInitViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskInitViewController.xib; sourceTree = "<group>"; };
+		3ECC2D922510C44B003C9213 /* TaskTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTutorialViewController.swift; sourceTree = "<group>"; };
+		3ECC2D932510C44B003C9213 /* TaskTutorialViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskTutorialViewController.xib; sourceTree = "<group>"; };
 		3ED1987524A1091D008A95CB /* MIKKE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MIKKE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3ED1987824A1091D008A95CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3ED1987A24A1091D008A95CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -231,6 +235,15 @@
 			path = TaskInitViewController;
 			sourceTree = "<group>";
 		};
+		3ECC2D912510C3C9003C9213 /* TaskTutorialViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3ECC2D922510C44B003C9213 /* TaskTutorialViewController.swift */,
+				3ECC2D932510C44B003C9213 /* TaskTutorialViewController.xib */,
+			);
+			path = TaskTutorialViewController;
+			sourceTree = "<group>";
+		};
 		3ED1986C24A1091D008A95CB = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				3E18F54324CD6F270048E57B /* MIKKE.entitlements */,
+				3ECC2D912510C3C9003C9213 /* TaskTutorialViewController */,
 				3E4E3F5424F54A0C006F3CA1 /* TaskAddFriendSearchViewController */,
 				3E4E3F4F24F549B8006F3CA1 /* TaskAddFriendMethodViewController */,
 				3EA1CE7824E8EDF800B2E4C7 /* TaskInitViewController */,
@@ -406,6 +420,7 @@
 				3EE445A224F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.xib in Resources */,
 				3E4E3F5824F54A4D006F3CA1 /* TaskAddFriendSearchViewController.xib in Resources */,
 				3E40AE1324DCD778003BCAAB /* TaskMikkeTableViewCell.xib in Resources */,
+				3ECC2D952510C44B003C9213 /* TaskTutorialViewController.xib in Resources */,
 				3E51F6D124A4D5EB003D60F4 /* TaskGroupTableViewCell.xib in Resources */,
 				3E4E3F5324F54A04006F3CA1 /* TaskAddFriendMethodViewController.xib in Resources */,
 				3E5F61E824A3180C007181D0 /* TaskMakeTableViewController.xib in Resources */,
@@ -490,6 +505,7 @@
 				3E51F6D024A4D5EB003D60F4 /* TaskGroupTableViewCell.swift in Sources */,
 				3E4E3F5224F54A04006F3CA1 /* TaskAddFriendMethodViewController.swift in Sources */,
 				3E51F6D824A6119D003D60F4 /* TaskGroupDetailViewController.swift in Sources */,
+				3ECC2D942510C44B003C9213 /* TaskTutorialViewController.swift in Sources */,
 				3ED1989B24A10FCD008A95CB /* UserInfoRepositories.swift in Sources */,
 				3ED1989D24A112BA008A95CB /* TaskGroupViewController.swift in Sources */,
 				3E5F61E724A3180C007181D0 /* TaskMakeTableViewController.swift in Sources */,

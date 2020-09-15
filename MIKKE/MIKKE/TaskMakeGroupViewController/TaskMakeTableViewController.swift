@@ -94,6 +94,9 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
         dispatchGroup.notify(queue: DispatchQueue.main){                        //全てのタスクが完了したらコールされる
             //テーブルビュー再表示
             self.makeGroupTableView.reloadData()
+            
+            //友達が一人も登録されていないかどうか判定
+            self.checkNoFriendAlert()
         }
     }
     
@@ -253,6 +256,16 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
                     self.dispatchGroup.leave()
                 }
             }
+        }
+    }
+    
+    //友達が一人も登録されていないかどうか判定関数
+    func checkNoFriendAlert(){
+        if UserInfoManager.sharedInstance.getGroupIdsCountAtCurrentUserID()==0{
+            let title = "ともだちが未登録です"
+            let message = "\nホーム画面から\n友達を追加してみましょう！"
+            
+            self.showAlert( title:title, message:message )
         }
     }
     

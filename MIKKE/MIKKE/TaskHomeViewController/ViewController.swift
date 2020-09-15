@@ -45,15 +45,25 @@ class ViewController: UIViewController, UserInfoDelegate{
         //初期のデータのロードはまだ未完了(初期画面はまだ未表示)
         InitViewCompleteRepository.saveInitViewCompleteDefaults(initComplete: false)
         
-        //ログインチェック
-        if self.isLogin() == false{
-            // ログインビューコントローラを表示
-            self.presentLoginViewController()
+        //初期画面遷移判定
+        /* ForDebug *
+        TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: false)
+        * ForDebugEnd */
+        if TutorialViewCompleteRepository.loadTutorialViewCompleteDefaults()==false{
+            //チュートリアル画面を表示
+            self.presentTutorialViewController()
             return
         }else{
-            // Initビューコントローラを表示
-            self.presentInitViewController()
-            return
+            //ログインチェック
+            if self.isLogin() == false{
+                // ログインビューコントローラを表示
+                self.presentLoginViewController()
+                return
+            }else{
+                // Initビューコントローラを表示
+                self.presentInitViewController()
+                return
+            }
         }
     }
     
@@ -114,6 +124,17 @@ class ViewController: UIViewController, UserInfoDelegate{
         
         //読み込み(プロフィールの編集に渡す時の為にLocalに保存)
         localNameImageView = nameImageView
+    }
+    
+    //チュートリアル画面の表示関数
+    func presentTutorialViewController(){
+        let TutorialVC = TaskTutorialViewController()
+        
+        //モーダルスタイルを指定
+        TutorialVC.modalPresentationStyle = .fullScreen
+        
+        //表示
+        self.present(TutorialVC, animated: true, completion: nil)
     }
     
     //Init画面の表示関数

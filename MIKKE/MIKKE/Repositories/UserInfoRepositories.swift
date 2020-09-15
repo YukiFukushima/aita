@@ -74,6 +74,25 @@ class InitViewCompleteRepository {
     }
 }
 
+//チュートリアル画面完了フラグの記憶用
+class TutorialViewCompleteRepository {
+    // UserDefaults に使うキー
+    static let tutorialViewCompleteSelectsKey:String = "tutorial_view_complete"
+    
+    static func saveTutorialViewCompleteDefaults(tutorialComplete:Bool){
+        //UserDefaultsに保存
+        UserDefaults.standard.set(tutorialComplete, forKey: tutorialViewCompleteSelectsKey)
+        
+    }
+    
+    static func loadTutorialViewCompleteDefaults()->Bool{
+        //UserDefaultsから読み出し
+        let tutorialComplete = UserDefaults.standard.bool(forKey: tutorialViewCompleteSelectsKey)
+        
+        return tutorialComplete
+    }
+}
+
 /*
 //ユーザー情報の記憶用
 class UserInfoRepository {

@@ -41,8 +41,16 @@ class TaskLoginViewController: UIViewController, UserInfoDelegate, UITextFieldDe
     
     //成功時の画面遷移処理
     func presentTaskHomeViewController(){
+        //初期画面終了
         InitViewCompleteRepository.saveInitViewCompleteDefaults(initComplete: true)
-        self.dismiss(animated: true, completion: nil)
+        
+        //チュートリアル画面からの遷移なら
+        if TutorialViewCompleteRepository.loadTutorialViewCompleteDefaults()==false{
+            TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: true) //チュートリアル画面表示済み
+            self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil) //前の前の画面表示
+        }else{
+            self.dismiss(animated: true, completion: nil)   //前の画面表示
+        }
     }
     
     //アラート表示関数
