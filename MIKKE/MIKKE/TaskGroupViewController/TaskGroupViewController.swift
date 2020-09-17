@@ -216,9 +216,10 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         saveGroupOfStatusToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
         
         //ステータスの変更をPush通知
-        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
+        //if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
             pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
-        }
+        //}
+        
         //再描画
         taskGroupTableView.reloadData()
         
@@ -262,7 +263,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 SendMessage.sendMessageToUser(userIdToken: userToken,
                                               title: sendTile,
-                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが\nFreeに変更されました！")
+                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが変更されました！")
             }
         }
     }

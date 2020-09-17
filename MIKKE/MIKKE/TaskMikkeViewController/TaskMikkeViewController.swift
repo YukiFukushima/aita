@@ -481,7 +481,7 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 SendMessage.sendMessageToUser(userIdToken: userToken,
                                               title: sendTile,
-                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが\nFreeに変更されました！")
+                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが変更されました！")
             }
         }
     }
@@ -517,8 +517,8 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         saveGroupOfStatusToFirestore()
         
         //ステータスの変更をPush通知
-        if getCurrentUserStatusInCurrentGroup()==true{  //Freeになったら通知
+        //if getCurrentUserStatusInCurrentGroup()==true{  //Freeになったら通知
             pushStatusChangeToOtherUser()
-        }
+        //}
     }
 }
