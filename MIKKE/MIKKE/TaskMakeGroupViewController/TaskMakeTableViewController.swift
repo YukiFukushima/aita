@@ -346,6 +346,21 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
                 print(userToken)
                 * EndForDebug */
                 //sendMessage(userIdToken:userToken)
+                
+                /* ForDebug *
+                let vc = TaskGroupViewController()
+                //guard let viewId = vc.view.restorationIdentifier else{return}
+                //guard let viewId = vc.self.view.restorationIdentifier else{return}
+                //guard let viewId = self.view.restorationIdentifier else{return}
+                guard let viewId = vc.restorationIdentifier else{return}
+                
+                //let vc = storyboard?.instantiateViewController(withIdentifier: "TaskGroupTableView")
+                //guard let viewId = vc?.self.view.restorationIdentifier else{return}
+                print("viewId:")
+                print(viewId)
+                
+                * EndForDebug */
+                
                 SendMessage.sendMessageToUser(userIdToken: userToken,
                                               title: "招待されました",
                                               body: "グループ「"+groupCandidate.groupName+"」に参加しましょう")

@@ -151,6 +151,15 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
         //updateフラグを上げる
         if userTitle=="招待されました"{
             UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: true)
+            
+            /*
+            var window:UIWindow?
+            window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let initialViewController = storyboard.instantiateViewController(identifier: "GroupTableView")
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+            */
         }
         //print(userInfo)
         
@@ -171,6 +180,15 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
         //updateフラグを上げる
         if userTitle=="招待されました"{
             UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: true)
+            
+            /*
+            var window:UIWindow?
+            window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let initialViewController = storyboard.instantiateViewController(identifier: "GroupTableView")
+            window?.rootViewController = initialViewController
+            window?.makeKeyAndVisible()
+            */
         }
         //print(userInfo)
         

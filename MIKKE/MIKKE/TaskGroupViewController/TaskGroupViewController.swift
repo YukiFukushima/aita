@@ -216,8 +216,9 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         saveGroupOfStatusToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
         
         //ステータスの変更をPush通知
-        pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
-        
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
+            pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        }
         //再描画
         taskGroupTableView.reloadData()
         
@@ -261,7 +262,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 SendMessage.sendMessageToUser(userIdToken: userToken,
                                               title: sendTile,
-                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが変更されました！")
+                                              body: UserInfoManager.sharedInstance.getNameAtCurrentUserID()+"さんのステータスが\nFreeに変更されました！")
             }
         }
     }
@@ -270,6 +271,9 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     func addMyGroupIdsFromSearchingGrouoInfo(){
         let myUserId = UserInfoManager.sharedInstance.getCurrentUserID()
         var necessarySaveFirestore:Bool = false
+        var newGroupIds:[String] = [""]
+        
+        newGroupIds.removeAll()
         
         //グループ内検索(自分(Id)の入っているグループ(taskId)を見つける)
         for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount() {
@@ -293,15 +297,24 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
                     if isRegisterd==false{
                         let groupId = GroupInfoManager.sharedInstance.getGroupInfo(num: i).taskId
                         
-                        //参加Grに加える
-                        UserInfoManager.sharedInstance.appendGroupIdsAtCurrentUserID(groupId: groupId)
+                        //参加Gr(バッファ)に加える
+                        //UserInfoManager.sharedInstance.appendGroupIdsAtCurrentUserID(groupId: groupId)
+                        newGroupIds.insert(groupId, at: 0)
                         
                         //確認済みGrに加える
-                        UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds.append(groupId)
+                        //UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds.append(groupId)
                         necessarySaveFirestore = true
                     }
                     break
                 }
+            }
+        }
+        
+        //加えるべきGrを加える
+        if newGroupIds.count != 0{
+            for i in 0 ..< newGroupIds.count {
+                UserInfoManager.sharedInstance.appendGroupIdsAtCurrentUserID(groupId: newGroupIds[i])
+                UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds.append(newGroupIds[i])
             }
         }
         

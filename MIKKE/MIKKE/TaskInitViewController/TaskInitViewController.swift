@@ -44,6 +44,14 @@ class TaskInitViewController: UIViewController, UserInfoDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
                 InitViewCompleteRepository.saveInitViewCompleteDefaults(initComplete: true)
                 self.dismiss(animated: true, completion: nil)   //Main画面に戻る
+                /*
+                if UserGroupUpdateRepository.loadUserGroupUpdateDefaults()==true{           //新しいグループに招待されているなら
+                    let vc = TaskGroupViewController()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }else{
+                    self.dismiss(animated: true, completion: nil)   //Main画面に戻る
+                }
+                */
             }
         }
     }

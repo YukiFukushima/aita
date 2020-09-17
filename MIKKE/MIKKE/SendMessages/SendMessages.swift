@@ -15,6 +15,7 @@ class SendMessage {
         let url = URL(string: "https://fcm.googleapis.com/fcm/send")!
         let userIdToken:String = userIdToken
         var request = URLRequest(url: url)               //Requestを生成
+        
         let postMessage: [String: Any] = [
             "to": userIdToken,
             "priority": "high", // highにするとアプリが非起動時・バックグラウンドでも通知が来る
