@@ -47,7 +47,8 @@ class TaskLoginViewController: UIViewController, UserInfoDelegate, UITextFieldDe
         //チュートリアル画面からの遷移なら
         if TutorialViewCompleteRepository.loadTutorialViewCompleteDefaults()==false{
             TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: true) //チュートリアル画面表示済み
-            self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil) //前の前の画面表示
+            //self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil) //前の前の画面表示
+            self.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
         }else{
             self.dismiss(animated: true, completion: nil)   //前の画面表示
         }

@@ -46,9 +46,9 @@ class ViewController: UIViewController, UserInfoDelegate{
         InitViewCompleteRepository.saveInitViewCompleteDefaults(initComplete: false)
         
         //初期画面遷移判定
-        /* ForDebug *
+        /* ForDebug */
         TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: false)
-        * ForDebugEnd */
+        /* ForDebugEnd */
         if TutorialViewCompleteRepository.loadTutorialViewCompleteDefaults()==false{
             //チュートリアル画面を表示
             self.presentTutorialViewController()

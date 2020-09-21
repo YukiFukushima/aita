@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -70,14 +72,14 @@ To
                                 <color key="textColor" red="0.92549639939999995" green="0.92547911410000006" blue="0.92549085620000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j9W-iP-iUC" customClass="AnimatableButton" customModule="IBAnimatable">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j9W-iP-iUC" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="594" width="335" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="XJ3-bn-LPl"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="はじめよう">
+                                <state key="normal" title="次へ">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
@@ -104,7 +106,7 @@ To
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="tappedStartBtn:" destination="-1" eventType="touchUpInside" id="qAx-gT-AhS"/>
+                                    <action selector="tappedNextPageBtn:" destination="-1" eventType="touchUpInside" id="ix4-tH-EOJ"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -125,7 +127,8 @@ To
                     <blurEffect style="regular"/>
                 </visualEffectView>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="13a-1f-bLV" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="5Rb-4W-yTM"/>
                 <constraint firstItem="b7Q-kl-ntt" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="K3W-PD-lIE"/>
@@ -136,12 +139,22 @@ To
                 <constraint firstItem="13a-1f-bLV" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="gdv-my-K2s"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="13a-1f-bLV" secondAttribute="bottom" id="sCl-Of-I40"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="131.8840579710145" y="134.59821428571428"/>
         </view>
     </objects>
+    <designables>
+        <designable name="SmM-YT-WnX">
+            <size key="intrinsicContentSize" width="330" height="330"/>
+        </designable>
+        <designable name="j9W-iP-iUC">
+            <size key="intrinsicContentSize" width="31" height="30"/>
+        </designable>
+    </designables>
     <resources>
         <image name="SunnySky" width="225" height="225"/>
         <image name="aitaSNS" width="330" height="330"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
