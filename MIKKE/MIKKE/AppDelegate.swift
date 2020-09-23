@@ -139,7 +139,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 @available(iOS 10, *)
 extension AppDelegate:UNUserNotificationCenterDelegate{
     // アプリがフォアグラウンドで起動している際にプッシュ通知が届いたら呼ばれる。
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
         if let messageID = userInfo["gcm.message_id"]{
             print("Message ID:\(messageID)")
@@ -167,7 +169,9 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
     }
     
     // プッシュ通知に対しタッチ等のアクションを行った時に呼ばれる。
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         if let messageID = userInfo["gcm.message_id"]{
             print("Message ID:\(messageID)")

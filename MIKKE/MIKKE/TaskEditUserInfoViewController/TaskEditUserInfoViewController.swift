@@ -84,6 +84,8 @@ class TaskEditUserInfoViewController: UIViewController, UserInfoDelegate, UIText
             result = .availableId
         }else if !self.isAlphanumeric(string:uniqueId){  //半角英数時以外だったら
             result = .eregularId
+        }else if uniqueId.count<6{
+            result = .underCountId
         }else{
             //入力されたIDが既に他人に使用されていたら入力済みだった場合はNG
             for i in 0 ..< UserInfoManager.sharedInstance.getUserListsCount() {
@@ -114,6 +116,8 @@ class TaskEditUserInfoViewController: UIViewController, UserInfoDelegate, UIText
                 showAlert( title:"エラー", message:"このIDは使用できません" )
             case .eregularId:
                 showAlert( title:"エラー", message:"半角英数時のみ入力可能です" )
+            case .underCountId:
+                showAlert( title:"エラー", message:"6文字以上で入力して下さい" )
             case .availableId:
                 //名前を保存
                 UserInfoManager.sharedInstance.setNameAtCurrentUserID(name: reName)

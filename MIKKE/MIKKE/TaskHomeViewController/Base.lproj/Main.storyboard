@@ -28,7 +28,7 @@
                                 </view>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOe-FI-jnA">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iOe-FI-jnA" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="349" width="335" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="yKT-Vx-2DL"/>
@@ -55,7 +55,7 @@
                                     <action selector="tappedInviteFriendsBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="nTS-Pj-SO8"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i3n-BZ-IbC">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i3n-BZ-IbC" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="392" width="335" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="Yqz-88-d7p"/>
@@ -88,7 +88,7 @@
                                     <action selector="tappedMakeGroupBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dm7-xa-tdE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EQu-R3-uL9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EQu-R3-uL9" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="521" width="335" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="ske-1B-kU6"/>
@@ -121,7 +121,7 @@
                                     <action selector="tappedLogoutBtn:" destination="BYZ-38-t0r" eventType="touchUpInside" id="11E-OZ-pCQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lcr-Kg-Gkx">
+                            <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lcr-Kg-Gkx" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="478" width="335" height="38"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -165,7 +165,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b30-Al-RSn">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b30-Al-RSn" customClass="AnimatableButton" customModule="IBAnimatable">
                                 <rect key="frame" x="20" y="435" width="335" height="38"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -347,6 +347,23 @@
             <point key="canvasLocation" x="1042" y="848"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="EQu-R3-uL9">
+            <size key="intrinsicContentSize" width="107" height="38"/>
+        </designable>
+        <designable name="Lcr-Kg-Gkx">
+            <size key="intrinsicContentSize" width="193" height="38"/>
+        </designable>
+        <designable name="b30-Al-RSn">
+            <size key="intrinsicContentSize" width="83" height="38"/>
+        </designable>
+        <designable name="i3n-BZ-IbC">
+            <size key="intrinsicContentSize" width="129" height="38"/>
+        </designable>
+        <designable name="iOe-FI-jnA">
+            <size key="intrinsicContentSize" width="150" height="38"/>
+        </designable>
+    </designables>
     <resources>
         <image name="SunnySky" width="225" height="225"/>
         <image name="house" catalog="system" width="128" height="106"/>

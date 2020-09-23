@@ -528,6 +528,7 @@ class ShareItem<T>: NSObject, UIActivityItemSource {
 enum ResultUniqueId: String {
     case sameId = "既に使用済みのID"
     case eregularId = "半角英数以外のID"
+    case underCountId = "文字数が少ないID"
     case availableId = "使用可能なID"
 }
 
