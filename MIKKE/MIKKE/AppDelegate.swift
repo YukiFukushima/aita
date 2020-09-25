@@ -188,6 +188,18 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
             /*
             var window:UIWindow?
             window = UIWindow(frame: UIScreen.main.bounds)
+            let navigationController =  UINavigationController(rootViewController: TaskEditUserInfoViewController())
+            window?.rootViewController = navigationController
+            window?.makeKeyAndVisible() //signal SIGABRT, Console(libc++abi.dylib: terminating with uncaught exception of type NSException)
+            //2: この3行を追加します
+            window = UIWindow(frame: UIScreen.main.bounds)
+            window?.rootViewController = TaskEditUserInfoViewController(nibName: "TaskEditUserInfoViewController", bundle: nil)
+            window?.makeKeyAndVisible()
+            */
+            
+            /*
+            var window:UIWindow?
+            window = UIWindow(frame: UIScreen.main.bounds)
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let initialViewController = storyboard.instantiateViewController(identifier: "GroupTableView")
             window?.rootViewController = initialViewController
