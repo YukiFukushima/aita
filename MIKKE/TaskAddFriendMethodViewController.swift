@@ -120,7 +120,7 @@ class TaskAddFriendMethodViewController: UIViewController, UITableViewDelegate, 
         
         //パターン2:ShareSheet上はshareWebsiteに従ってアイコンも文言も表示。SNSで通知した先では下のアイテムが全て表示(リリース後はこっちが良さそう)
         let shareText = ShareItem("aitaでメッセージのやり取りをしてみませんか?")
-        let shareWebsite = ShareItem(NSURL(string: "https://apps.apple.com/us/app/id1531293068")!)
+        let shareWebsite = ShareItem(NSURL(string: "https://apps.apple.com/us/app/id1533569159")!)
         let shareImage = ShareItem(UIImage(named: "aitaSNS")!)
         let activityItems = [shareText, shareWebsite, shareImage] as [Any]
         

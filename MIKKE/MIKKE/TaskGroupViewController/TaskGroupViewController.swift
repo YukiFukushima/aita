@@ -36,16 +36,6 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         if UserGroupUpdateRepository.loadUserGroupUpdateDefaults()==true{           //新しいグループに招待されているなら
             UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: false)  //updateフラグを落とす
         }
-        
-        /*
-        if UserGroupUpdateRepository.loadUserGroupUpdateDefaults()==true{   //新しいグループに招待されているなら
-            self.addMyGroupIdsFromSearchingGrouoInfo()  //自分の入っているグループを検索して、自分の情報(自分が入っているグループ群)に加える
-            UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: false)  //updateフラグを落とす
-        }
-        
-        //restoreDataFromFirestore()            //自デバイスでグループを作って戻ってきた時のため
-        self.taskGroupTableView.reloadData()    //自デバイスでグループを作って戻ってきた時のため
-        */
     }
     
     //友達が一人も登録されていないかどうか判定関数
@@ -56,11 +46,6 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             
             //UIAlertActionを追加
             alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            /*
-            alertVC.addAction(UIAlertAction(title: "友達登録へ", style: .default, handler: { (action) in
-                self.registerFriend()
-            }))
-            */
             
             //表示
             self.present(alertVC, animated: true, completion: nil)
