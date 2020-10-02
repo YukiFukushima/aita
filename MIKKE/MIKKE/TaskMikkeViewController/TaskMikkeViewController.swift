@@ -21,6 +21,8 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var currentUserImageView: UIImageView!
     @IBOutlet weak var currentUserDetailStatus: UILabel!
     let db = Firestore.firestore()
+    var listner:ListenerRegistration? = nil
+    
     var tappedIndexPathRow:Int = 0                  // 選択したテーブルビューの番号
     @IBOutlet weak var paperSwitch: RAMPaperSwitch!
     
@@ -90,6 +92,7 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.tabBarController?.tabBar.isHidden = false
+        self.listner?.remove()
     }
     
     // navigation barの設定
@@ -417,7 +420,7 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
     //Firestoreでリアルタイム監視
     func observeRealTimeFirestore(){
         //監視(ステータスに変更があったのかを監視する)
-        db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
+        self.listner = db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
             /* ForDebug *
             guard let document = DocumentSnapshot else{ return }
             guard let data = document.data() else{ return }

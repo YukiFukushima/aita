@@ -15,6 +15,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
 
     @IBOutlet weak var taskGroupTableView: UITableView!
     let db = Firestore.firestore()
+    var listner:ListenerRegistration? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,10 +33,28 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     
     /* 再描画 */
     override func viewWillAppear(_ animated: Bool) {
-        observeRealTimeFirestore()                                                  //グループを読み込んで再評価&監視
+        super.viewWillAppear(animated)
+                
+        self.taskGroupTableView.reloadData()    //監視後のロードとダブるけどViewの更新はとにかく早くする
+        self.observeRealTimeFirestore()         //Firestoreを監視
+        
         if UserGroupUpdateRepository.loadUserGroupUpdateDefaults()==true{           //新しいグループに招待されているなら
             UserGroupUpdateRepository.saveUserGroupUpdateDefaults(goUpdate: false)  //updateフラグを落とす
         }
+        
+    }
+    
+    /* テーブルview表示後にコールされる関数 */
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        //self.observeRealTimeFirestore()    //Firestoreを監視
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.listner?.remove()
     }
     
     //友達が一人も登録されていないかどうか判定関数
@@ -54,6 +73,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     
     /* TableViewCellを読み込む(登録する)関数 */
     func configureTableViewCell(){
+        
         /* nibを作成*/
         let nib = UINib(nibName: "TaskGroupTableViewCell", bundle: nil)
         
@@ -83,9 +103,9 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         
         /* グループメンバー追加画像タップ時イベント設定 */
         cell.currentUserImage.layer.cornerRadius = 18
-        cell.currentUserImage.isUserInteractionEnabled = true
-        cell.currentUserImage.tag = indexPath.row
-        cell.currentUserImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
+        //cell.currentUserImage.isUserInteractionEnabled = true
+        //cell.currentUserImage.tag = indexPath.row
+        //cell.currentUserImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addGroupMemberImageViewTapped)))
         viewNameImage(reqUSerId:UserInfoManager.sharedInstance.getCurrentUserID(), currentUserImageView: cell.currentUserImage)
         
         /* グループ名を表示+グループイメージを表示 */
@@ -96,7 +116,6 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         if GroupInfoManager.sharedInstance.getGroupNamgeAtRequestTaskId(reqTaskId: groupId)=="friend"{
             //2人だけなので自分以外の名前を出す
             cell.groupLabel.text = getFriendNameOfFriendGroup(groupId:groupId)
-            //cell.groupImageView.image = UIImage(named: "aita")
             viewNameImage(reqUSerId:getFriendIdOfFriendGroup(groupId:groupId), currentUserImageView: cell.groupImageView)
         }else{
             cell.groupLabel.text = GroupInfoManager.sharedInstance.getGroupNamgeAtRequestTaskId(reqTaskId: groupId)
@@ -185,39 +204,6 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         return resultFriendName
-    }
-    
-    /* グループメンバー追加画像がクリックされた時にCallされる関数 */
-    @objc func addGroupMemberImageViewTapped(sender:UITapGestureRecognizer){
-        guard let inputRow=sender.view?.tag else {return}
-        
-        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{
-            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: false)
-        }else{
-            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: true)
-        }
-        
-        //FireStoreに保存
-        saveGroupOfStatusToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
-        
-        //ステータスの変更をPush通知
-        //if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
-            pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
-        //}
-        
-        //再描画
-        taskGroupTableView.reloadData()
-        
-        /*
-        let vc = TaskMakeTableViewController()
-        
-        //グループID作成
-        var groupId:String = ""
-        let currentUserInfo:UserInfo = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID()
-        groupId = currentUserInfo.groupIds[inputRow]
-        vc.requestGroupId = groupId
-        navigationController?.pushViewController(vc, animated: true)
-        */
     }
     
     //自分以外のユーザーで、ステータスがFreeの人にステータス変更を通知する
@@ -344,36 +330,47 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         //監視(ステータスに変更があったのかを監視する)
         //db.collection("Groups").whereField("status", isEqualTo: "true").addSnapshotListener{ querySnapshot, error in
         //db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
-        db.collection("Groups").addSnapshotListener{ DocumentSnapshot, error in
-           
+        self.listner = db.collection("Groups").addSnapshotListener{ DocumentSnapshot, error in
             self.db.collection("Groups").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
-                //配列を全削除
-                GroupInfoManager.sharedInstance.groupInfo.removeAll()
                 
-                //再度読み直して配列に保存
-                if let err = err{
-                    print("エラー:\(err)")
+                let source = (DocumentSnapshot?.metadata.hasPendingWrites)! ? "Local" : "Server"
+                
+                /* ForDebug *
+                print("addSnapData:")
+                print(source)
+                * EndForDebug */
+                
+                if source=="Local"{
+                    //再描画
+                    self.taskGroupTableView.reloadData()
                 }else{
-                    //取得したDocument群の1つ1つのDocumentについて処理をする
-                    for document in querySnapShot!.documents{
-                        //各DocumentからはDocumentIDとその中身のdataを取得できる
-                        /* print("\(document.documentID) => \(document.data())") */
-                        //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
-                        do {
-                            let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
-                            //変換に成功
-                            GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
-                            //GroupInfoManager.sharedInstance.groupInfo.insert(decodedTask, at: self.groupNumber)
-                        } catch let error as NSError{
-                            print("エラー:\(error)")
-                        }
-                    }
+                    //配列を全削除
+                    GroupInfoManager.sharedInstance.groupInfo.removeAll()
                     
-                    //Talk情報の読み込み
-                    self.readTalksInfoFromFireStore()
+                    //再度読み直して配列に保存
+                    if let err = err{
+                        print("エラー:\(err)")
+                    }else{
+                        //取得したDocument群の1つ1つのDocumentについて処理をする
+                        for document in querySnapShot!.documents{
+                            //各DocumentからはDocumentIDとその中身のdataを取得できる
+                            /* print("\(document.documentID) => \(document.data())") */
+                            //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
+                            do {
+                                let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
+                                //変換に成功
+                                GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
+                                //GroupInfoManager.sharedInstance.groupInfo.insert(decodedTask, at: self.groupNumber)
+                            } catch let error as NSError{
+                                print("エラー:\(error)")
+                            }
+                        }
+                        
+                        //Talk情報の読み込み
+                        self.readTalksInfoFromFireStore()
+                    }
                 }
             }
-            
         }
     }
     
@@ -387,7 +384,6 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             if let err = err{
                 print("エラー:\(err)")
             }else{
-                
                 //取得したDocument群の1つ1つのDocumentについて処理をする
                 for document in querySnapShot!.documents{
                     //各DocumentからはDocumentIDとその中身のdataを取得できる
@@ -420,7 +416,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     //Firestoreに保存する関数
-    func saveGroupOfStatusToFirestore(groupNo:Int){
+    func saveGroupInfoToFirestore(groupNo:Int){
         //GroupのタスクIDを取得
         let taskId = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).taskId
         
@@ -439,6 +435,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             print("エラー\(error)")
         }
     }
+    
     /* Firestoreからの削除関数 */
     func deleteTaskFromFirestore(deleteGropuNum:Int){
         db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGropuNum).taskId).delete()
@@ -446,14 +443,34 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     
     /* スワイプ処理(削除) */
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        var deleteGroupInfoNum:Int = 0
-        var deleteGroupIdNum:Int = 0
         var deleteExecute:Bool = false
+        var deleteVerifyExecute:Bool = false
+        var deleteFriendExecute:Bool = false
+        var deleteMyIdNumExecute:Bool = false
+        var deleteGroupInfoNum:Int = 0
+        var deleteGroupMyIdNum:Int = 0
+        var deleteFriendIdNum:Int = 0
+        var deleteMyIdNumAtGroup:Int = 0
+        var deleteGroupIdNum:Int = 0
+        var deleteVerifyExecuteNum:Int = 0
         
-        //削除するグループ(taskId)を取得
+        //1.削除するグループ(taskId)を取得
         let deleteTaskId = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds[indexPath.row]
         
-        //削除するグループの番号を取得
+        //1.削除するグループIDが入っている自分のGrIdの配列番号を取得
+        for i in 0 ..< UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds.count{
+            if UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds[i]==deleteTaskId{
+                deleteGroupMyIdNum = i
+                deleteExecute = true
+            }
+        }
+        
+        //1.配列から削除する必要があるなら
+        if deleteExecute==true{
+            UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds.remove(at: deleteGroupMyIdNum)
+        }
+        
+        //3.削除するグループの番号を取得
         for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount(){
             if GroupInfoManager.sharedInstance.getGroupInfo(num: i).taskId==deleteTaskId{
                 deleteGroupInfoNum = i
@@ -461,17 +478,77 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
         
-        for i in 0 ..< UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds.count{
-            if UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds[i]==deleteTaskId{
-                deleteGroupIdNum = i
-                deleteExecute = true
+        //3.削除するGrIdが友達のGrか否か判定
+        if GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGroupInfoNum).groupName=="friend"{
+            //自分の友達リストから削除
+            var friendNameId:String = ""
+            
+            //友達のIdを取得
+            for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGroupInfoNum).GroupMemberNamesInfo.count {
+                if GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGroupInfoNum).GroupMemberNamesInfo[i].groupMemberNames != UserInfoManager.sharedInstance.getCurrentUserID(){
+                    friendNameId = GroupInfoManager.sharedInstance.getGroupInfo(num: deleteGroupInfoNum).GroupMemberNamesInfo[i].groupMemberNames
+                    break;
+                }
+            }
+            
+            //友達のIdが入っている配列要素を見つける、配列から削除(自分の友達リストから削除)
+            for i in 0 ..< UserInfoManager.sharedInstance.getFriendCountAtCurrentUserID(){
+                if friendNameId==UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().friendIds[i]{
+                    deleteFriendIdNum = i
+                    deleteFriendExecute = true
+                }
+            }
+            
+            //配列から削除する必要があるなら
+            if deleteFriendExecute==true{
+                UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().friendIds.remove(at: deleteFriendIdNum)
+            }
+        }
+        //4.削除するGrIdがGrの場合
+        else{
+            for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount(){
+                if GroupInfoManager.sharedInstance.getGroupInfo(num: i).taskId==deleteTaskId{
+                    deleteGroupIdNum = i
+                    for j in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo.count{
+                        if UserInfoManager.sharedInstance.getCurrentUserID()==GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo[j].groupMemberNames{
+                            deleteMyIdNumAtGroup = j
+                            deleteMyIdNumExecute = true
+                            break
+                        }
+                    }
+                    
+                    //配列から削除する必要があるなら
+                    if deleteMyIdNumExecute==true{
+                        GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo.remove(at: deleteMyIdNumAtGroup)
+                    }
+                    break
+                }
+            }
+            
+            //2.削除するグループIDが入っている自分のVerify(確認済み)Idの配列番号を取得
+            for j in 0 ..< UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds.count{
+                if UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds[j]==deleteTaskId{
+                    deleteVerifyExecuteNum = j
+                    deleteVerifyExecute = true
+                }
+            }
+            
+            //2.配列から削除する必要があるなら
+            if deleteVerifyExecute==true{
+                UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().verifyGroupIds.remove(at: deleteVerifyExecuteNum)
             }
         }
         
-        //Firebaseに保存する必要があるなら
-        if deleteExecute==true{
-            UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds.remove(at: deleteGroupIdNum)
+        //5.User情報をFirebaseに保存する必要があるなら
+        if deleteExecute==true
+        || deleteFriendExecute==true
+        || deleteVerifyExecute==true{
             saveUserInfoToFirestore()
+        }
+        
+        //6.Group情報をFirebaseに保存する必要があるなら
+        if deleteMyIdNumExecute==true{
+            saveGroupInfoToFirestore(groupNo:deleteGroupIdNum)
         }
         
         /*
@@ -487,12 +564,47 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
         self.taskGroupTableView.reloadData()
     }
     
+    //自分のステータス変更関数
+    func actChangeStatus(inputRow:Int){
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: false)
+        }else{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: true)
+        }
+        
+        //FireStoreに保存
+        saveGroupInfoToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        
+        //ステータスの変更をPush通知
+        //if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
+            pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        //}
+        
+        //再描画(監視している先で再描画)
+        //taskGroupTableView.reloadData()
+    }
+    
+    /* 左から右へスワイプしてステータスを変更 */
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let statusChangeAction = UIContextualAction(style: .normal,
+                                                    title: "ステータス変更",
+                                                    handler: { (action: UIContextualAction, view: UIView, completion: (Bool) -> Void) in
+                                                        //print("statusChange")
+                                                        
+                                                        self.actChangeStatus(inputRow:indexPath.row)
+                                                        
+                                                        // 処理を実行完了した場合はtrue
+                                                        completion(true)
+                                                    })
+        statusChangeAction.backgroundColor = .systemTeal
+        return UISwipeActionsConfiguration(actions: [statusChangeAction])
+    }
+    
     /* タップ時処理 */
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //タップ後cellの色をすーっと変える
         taskGroupTableView.deselectRow(at: indexPath, animated: true)
         
-        //let vc = TaskGroupDetailViewController()
         let vc = TaskMikkeViewController()
         
         vc.tappedIndexPathRow = indexPath.row
@@ -652,6 +764,30 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     func registerFriend(){
         let vc = TaskAddFriendMethodViewController()
         navigationController?.pushViewController(vc, animated: true)
+    }
+    */
+    
+    /*
+    /* グループメンバー追加画像がクリックされた時にCallされる関数 */
+    @objc func addGroupMemberImageViewTapped(sender:UITapGestureRecognizer){
+        guard let inputRow=sender.view?.tag else {return}
+        
+        if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: false)
+        }else{
+            GroupInfoManager.sharedInstance.setCurrentUserStatusInCurrentGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow), status: true)
+        }
+        
+        //FireStoreに保存
+        saveGroupInfoToFirestore(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        
+        //ステータスの変更をPush通知
+        //if GroupInfoManager.sharedInstance.getCurrentUserStatusInReqGroup(reqGroupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))==true{  //Freeになったら通知
+            pushStatusChangeToOtherUser(groupNo:GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: inputRow))
+        //}
+        
+        //再描画(監視している先で再描画)
+        //taskGroupTableView.reloadData()
     }
     */
     /* 以下、未使用関数群終わり */

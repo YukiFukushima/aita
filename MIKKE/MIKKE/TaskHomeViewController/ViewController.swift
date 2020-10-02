@@ -71,7 +71,7 @@ class ViewController: UIViewController, UserInfoDelegate{
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        print("名前と画像の表示")
+        //print("名前と画像の表示")
         
         if InitViewCompleteRepository.loadInitViewCompleteDefaults()==true{
             //名前の表示
@@ -94,7 +94,7 @@ class ViewController: UIViewController, UserInfoDelegate{
     @objc func viewWillEnterForeground(_ notification: Notification?) {
         UIApplication.shared.applicationIconBadgeNumber = 0     //バッジを消す
         if (self.isViewLoaded && (self.view.window != nil)) {
-            print("フォアグラウンド")
+            //print("フォアグラウンド")
         }
     }
     

@@ -261,7 +261,7 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
     
     //友達が一人も登録されていないかどうか判定関数
     func checkNoFriendAlert(){
-        if UserInfoManager.sharedInstance.getGroupIdsCountAtCurrentUserID()==0{
+        if UserInfoManager.sharedInstance.getFriendCountAtCurrentUserID()==0{
             let title = "ともだちが未登録です"
             let message = "\nホーム画面から\n友達を追加してみましょう！"
             

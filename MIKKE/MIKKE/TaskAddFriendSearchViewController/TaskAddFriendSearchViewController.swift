@@ -204,22 +204,57 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
                     self.saveFriendGroupToFirestore(friendUserId:self.addFriendUserId)
                 }
                 
-                //友達を保存
+                //①友達と自分がグループ管理になっているが、自分の所属グループにそのグループが存在しない場合(削除した場合)再度追加(配列のみ)
+                self.addMyIdToExistFriendGroup(friendUserId:self.addFriendUserId)
+                
+                //②友達を保存(ここで、①の追加分と合わせてFirestoreに保存)
                 self.saveFriendToFirestore(friendUserId:self.addFriendUserId)
             }
         }
     }
     
-    //アラート表示関数
-    func showAlert( title:String, message:String? ){
-        //UIAlertControllerを関数の引数であるとtitleとmessageを使ってインスタンス化
-        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    //既に2人組のグループとして存在しているか否か判定し、存在している場合、自分の所属グループにそのグループを加える関数
+    func addMyIdToExistFriendGroup(friendUserId:String){
+        var result:Bool = false
+        var isExistMyIdInFriendGroup:Bool = false
+        var groupId:String = ""
         
-        //UIAlertActionを追加
-        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        //自分のカレントID取得
+        let currentUserId = UserInfoManager.sharedInstance.getCurrentUserID()
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoCount() {
+            //もしグループ名がfriendなら
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: i).groupName=="friend"{
+                let groupMemberOne = GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo[0].groupMemberNames
+                let groupMemberTwo = GroupInfoManager.sharedInstance.getGroupInfo(num: i).GroupMemberNamesInfo[1].groupMemberNames
+                
+                if groupMemberOne==currentUserId
+                && groupMemberTwo==friendUserId{
+                    result = true
+                }else if groupMemberOne==friendUserId
+                &&       groupMemberTwo==currentUserId{
+                    result = true
+                }
+                
+                //自分と友達のGrが存在しているなら
+                if result==true{
+                    groupId = GroupInfoManager.sharedInstance.getGroupInfo(num: i).taskId
+                    //自分の所属GrにそのGrがないなら追加
+                    for j in 0 ..< UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds.count{
+                        if UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().groupIds[j]==groupId{
+                            isExistMyIdInFriendGroup = true
+                            break
+                        }
+                    }
+                    break
+                }
+            }
+        }
         
-        //表示
-        self.present(alertVC, animated: true, completion: nil)
+        //引数で指定した友達とのグループが存在して且つ、自分がそのグループに所属していない場合
+        if result
+        && isExistMyIdInFriendGroup==false{
+            UserInfoManager.sharedInstance.appendGroupIdsAtCurrentUserID(groupId: groupId)  //所属Grに追加
+        }
     }
     
     //既に2人組のグループとして存在しているか否か判定する関数
@@ -249,6 +284,18 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         }
         
         return result
+    }
+    
+    //アラート表示関数
+    func showAlert( title:String, message:String? ){
+        //UIAlertControllerを関数の引数であるとtitleとmessageを使ってインスタンス化
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        //UIAlertActionを追加
+        alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        
+        //表示
+        self.present(alertVC, animated: true, completion: nil)
     }
     
     //グループ作成(自分と友人の2人で構成されるグループ)関数

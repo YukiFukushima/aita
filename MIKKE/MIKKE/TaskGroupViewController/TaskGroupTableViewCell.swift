@@ -14,6 +14,7 @@ class TaskGroupTableViewCell: UITableViewCell {
     @IBOutlet weak var groupLabel: UILabel!
     @IBOutlet weak var userStatusLabel: UILabel!
     @IBOutlet weak var currentUserImage: UIImageView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -24,5 +25,4 @@ class TaskGroupTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
 }

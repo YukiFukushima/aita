@@ -20,6 +20,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet weak var inputTextField: UITextView!
     @IBOutlet weak var commitBtnSymbol: UIButton!
     let db = Firestore.firestore()
+    var listner:ListenerRegistration? = nil
     
     var tappedIndexPathRow:Int = 0                  // 選択したテーブルビューの番号
     let notification = NotificationCenter.default   // KeyboardAction取得用変数(後々の勉強の為)
@@ -68,7 +69,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
             self.taskGroupDetailTableView.reloadData()
         }) { (finished) in
             self.dispTableViewFromBottom()
-            self.observeRealTimeFirestore()      //Firestoreを監視
+            //self.observeRealTimeFirestore()      //Firestoreを監視
             //print("reload完了しました🙂")
         }
     }
@@ -83,12 +84,13 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         super.viewWillDisappear(animated)
         self.tabBarController?.tabBar.isHidden = false
         self.activateCommitBtn()
+        self.listner?.remove()
     }
     
     /* テーブルview表示後にコールされる関数 */
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //observeRealTimeFirestore()      //Firestoreを監視
+        self.observeRealTimeFirestore()      //Firestoreを監視
     }
     
     // navigation barの設定
@@ -261,7 +263,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     
     /* cellに表示する内容 */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "GroupDetailTableViewCell", for: indexPath)as!TaskGroupDetailTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GroupDetailTableViewCell", for: indexPath)as!TaskGroupDetailTableViewCell
         
         /* 最初が空配列の場合、keyboard調整なので何も表示しないようにする */
         if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo[indexPath.row].groupMemberTalks==""{
@@ -406,39 +408,53 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     //Firestoreでリアルタイム監視
     func observeRealTimeFirestore(){
         //監視(会話に変更があったのかを監視する)
-        db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
+        self.listner = db.collection("Groups").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
+        //db.collection("Groups").where("state", "==", "CA").document(GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId).addSnapshotListener{ DocumentSnapshot, error in
             /* ForDebug *
             guard let document = DocumentSnapshot else{ return }
             guard let data = document.data() else{ return }
             print("Current data: \(data)")
             * EndForDebug */
             
+            /* ForDebug *
+            let source = (DocumentSnapshot?.metadata.hasPendingWrites)! ? "Local" : "Server"
+            print("addSnapData:")
+            print(source)
+            * EndForDebug */
+            
             self.db.collection("Groups").order(by: "createdAt", descending: true).getDocuments { (querySnapShot, err) in
-                //配列を全削除
-                GroupInfoManager.sharedInstance.groupInfo.removeAll()
+                let source = (DocumentSnapshot?.metadata.hasPendingWrites)! ? "Local" : "Server"
                 
-                //再度読み直して配列に保存
-                if let err = err{
-                    print("エラー:\(err)")
+                if source=="Local"{
+                    self.taskGroupDetailTableView.reloadData()                    //再描画
+                    self.dispTableViewFromBottom()                                // tableViewを後ろから表示
                 }else{
-                    //取得したDocument群の1つ1つのDocumentについて処理をする
-                    for document in querySnapShot!.documents{
-                        //各DocumentからはDocumentIDとその中身のdataを取得できる
-                        /*print("\(document.documentID) => \(document.data())")*/
-                        //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
-                        do {
-                            let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
-                            //変換に成功
-                            GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
-                            //GroupInfoManager.sharedInstance.groupInfo.insert(decodedTask, at: self.groupNumber)
-                            
-                        } catch let error as NSError{
-                            print("エラー:\(error)")
-                        }
-                    }
+                    //配列を全削除
+                    GroupInfoManager.sharedInstance.groupInfo.removeAll()
                     
-                    //トーク情報の読み込み
-                    self.readTalksInfoFromFireStore()
+                    //再度読み直して配列に保存
+                    if let err = err{
+                        print("エラー:\(err)")
+                    }else{
+                        //取得したDocument群の1つ1つのDocumentについて処理をする
+                        for document in querySnapShot!.documents{
+                            //各DocumentからはDocumentIDとその中身のdataを取得できる
+                            /*print("\(document.documentID) => \(document.data())")*/
+                            //型をUserInfo型に変換([String:Any]型で記録する為、変換が必要)
+                            do {
+                                let decodedTask = try Firestore.Decoder().decode(GroupInfo.self, from: document.data())
+                                //変換に成功
+                                GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
+                                //GroupInfoManager.sharedInstance.groupInfo.insert(decodedTask, at: self.groupNumber)
+                                
+                            } catch let error as NSError{
+                                print("エラー:\(error)")
+                            }
+                        }
+                        
+                        //トーク情報の読み込み
+                        self.readTalksInfoFromFireStore()
+                    }
                 }
             }
         }
@@ -506,7 +522,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         GroupInfoManager.sharedInstance.appendGroupInfoTalksInfo(num: getCurrentGroupNumberFromTappedGroup(), messageInfo: newMessageInfo)     //配列に追加
         
         saveGroupOfTalksToFirestore()                           //Firebaseに追加
-        observeRealTimeFirestore()                              //Firestoreを監視
+        //observeRealTimeFirestore()                            //Firestoreを監視(View表示の最初に一回)
         inputTextField.text = ""                                //空文字
         deActivateCommitBtn()                                   //アイコンを隠す(空文字にしたから)
         
