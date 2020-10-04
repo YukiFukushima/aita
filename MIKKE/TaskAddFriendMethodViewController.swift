@@ -137,6 +137,12 @@ class TaskAddFriendMethodViewController: UIViewController, UITableViewDelegate, 
         ]
         activityVC.excludedActivityTypes = excludedActivityTypes
         
+        //iPadでActivityViewControllerを出すため
+        activityVC.popoverPresentationController?.sourceView = self.view
+        activityVC.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.size.width / 2.0,
+                                                                      y: self.view.bounds.size.height / 2.0,
+                                                                      width: 1.0,
+                                                                      height: 1.0)
         // UIActivityViewControllerを表示
         self.present(activityVC, animated: true, completion: nil)
     }

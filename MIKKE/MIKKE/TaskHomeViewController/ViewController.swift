@@ -279,6 +279,16 @@ class ViewController: UIViewController, UserInfoDelegate{
         alertSheet.addAction(logoutAction)
         alertSheet.addAction(cancelAction)
         
+        // iPad の場合のみ、ActionSheetを表示するための必要な設定
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            alertSheet.popoverPresentationController?.sourceView = self.view
+            let screenSize = UIScreen.main.bounds
+            alertSheet.popoverPresentationController?.sourceRect = CGRect(x: screenSize.size.width / 2,
+                                                                           y: screenSize.size.height,
+                                                                           width: 0,
+                                                                           height: 0)
+        }
+        
         present(alertSheet, animated: true)
         
     }

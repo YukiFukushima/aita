@@ -29,6 +29,9 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
     //新規グループ作成時(requestGroupIdが空文字)/グループメンバー追加時(requestGroupIdが任意のGrId)
     var requestGroupId:String = ""
     
+    //既存グループに所属しているメンバーを格納する配列
+    var existGroupMember:[String] = [""]
+    
     //同期用変数
     let dispatchGroup = DispatchGroup()
     let dispatchQueue = DispatchQueue(label: "searchView", attributes: .concurrent)
@@ -88,6 +91,7 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
             self.title = "グループにメンバーを追加"
             
             self.setGroupCandidateOfRequestGroup()
+            self.setExistGroupMembers()
         }
         
         self.readUserInfoFromFirestore()
@@ -103,6 +107,18 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.tabBarController?.tabBar.isHidden = false
+    }
+    
+    //既存グループメンバーのメンバー名格納関数
+    func setExistGroupMembers(){
+        self.existGroupMember.removeAll()
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: requestGroupId).GroupMemberNamesInfo.count {
+            
+            self.existGroupMember.append(GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: requestGroupId).GroupMemberNamesInfo[i].groupMemberNames)
+            
+            //self.existGroupMember[i] = GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId: requestGroupId).GroupMemberNamesInfo[i].groupMemberNames
+        }
     }
     
     //グループメンバー追加時にコールされるグループメンバー格納関数
@@ -180,12 +196,39 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
             }
         }
         
+        //今のグループに既に入っているメンバーはグレー表示
+        if requestGroupId != ""{
+            for i in 0 ..< existGroupMember.count {
+                if existGroupMember[i]==UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().friendIds[indexPath.row]{
+                    cell.memberCandidateName.textColor = .lightGray
+                    break;
+                }
+            }
+        }
+        
         return cell
     }
     
     /* チェックボックスアイコンがクリックされた時にCallされる関数 */
     @objc func checkBoxIconViewTapped(sender:UITapGestureRecognizer){
         guard let inputRow=sender.view?.tag else {return}
+        var result:Bool = false
+        
+        //今のグループに既に入っているメンバーを見つけtrueにする
+        if requestGroupId != ""{
+            for i in 0 ..< existGroupMember.count {
+                if existGroupMember[i]==UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().friendIds[inputRow]{
+                    result = true
+                    break;
+                }
+            }
+        }
+        
+        //今のグループに既に入っているメンバーをクリックした場合何もしない
+        if result==true{
+            //print("既存！")
+            return
+        }
         
         let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
         

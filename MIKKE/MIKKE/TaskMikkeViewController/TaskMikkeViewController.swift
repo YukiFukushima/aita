@@ -399,9 +399,9 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
                         
                         let decodedTask = try Firestore.Decoder().decode(GroupMemberTalksInfo.self, from: document.data())
                         //変換に成功
-                        GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 5)
+                        GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 6)
                         
-                        //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 5)
+                        //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 6)
                         //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.append(decodedTask)
                         
                         //GroupInfoManager.sharedInstance.getGroupInfo(num: groupNum).groupMemberTalksInfo.append(decodedTask)
@@ -511,8 +511,10 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBAction func currentUserStatusSwitch(_ sender: Any) {
         if (sender as AnyObject).isOn{
             setCurrentUserStatusInCurrentGroup(status: true)
+            paperSwitch.backgroundColor = .systemTeal
         }else{
             setCurrentUserStatusInCurrentGroup(status: false)
+            paperSwitch.backgroundColor = .systemGray6
         }
         dispUserStatus(status: self.getCurrentUserStatusInCurrentGroup(), currentUserStatusLabel:currentUserStatus, isCurrentUser:true)
         

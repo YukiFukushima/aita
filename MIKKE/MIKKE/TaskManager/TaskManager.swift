@@ -417,7 +417,7 @@ class GroupInfoManager{
     /* 引数で渡されたGrNoのトーク情報の最初5つ分を空で埋める */
     func createGroupTalkTopAllay(groupNum:Int){
         let initMessageInfo:GroupMemberTalksInfo = GroupMemberTalksInfo.init(groupMemberNames: UserInfoManager.sharedInstance.getCurrentUserID(), groupMemberTalks: "", groupMemberTalksCreatedAt: Timestamp(), groupId: GroupInfoManager.sharedInstance.getGroupInfo(num: groupNum).taskId, talkId:"")
-        for _ in 0 ..< 5 {
+        for _ in 0 ..< 6 {
             GroupInfoManager.sharedInstance.appendGroupInfoTalksInfo(num: groupNum, messageInfo: initMessageInfo)
         }
     }

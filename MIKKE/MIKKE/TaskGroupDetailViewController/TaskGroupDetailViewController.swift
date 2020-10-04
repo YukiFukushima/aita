@@ -220,7 +220,9 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         
         //倍率設定
         let scale = height / self.taskGroupDetailTableView.frame.height
-        visualEffectView.frame = CGRect(x: 0, y: 0, width: self.taskGroupDetailTableView.frame.width * scale, height: self.taskGroupDetailTableView.frame.height * scale)
+        let scaleWidth = width / self.taskGroupDetailTableView.frame.width
+        
+        visualEffectView.frame = CGRect(x: 0, y: 0, width: self.taskGroupDetailTableView.frame.width * scaleWidth, height: self.taskGroupDetailTableView.frame.height * scale)
         visualEffectView.center = CGPoint(x: (width / 2), y: (height / 2))
         
         //visualEffectView.frame = self.taskGroupDetailTableView.frame
@@ -372,8 +374,8 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
                         * ForDebugEnd */
                         
                         //変換に成功
-                        GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 5)
-                        //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 5)
+                        GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 6)
+                        //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 6)
                         //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.append(decodedTask)
                         
                         //GroupInfoManager.sharedInstance.getGroupInfo(num: groupNum).groupMemberTalksInfo.append(decodedTask)
@@ -514,7 +516,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         /* 最初に空配列を入れてKeyboardが押し上げた時に隠れないようにする */
         if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo.count==0{
             let initMessageInfo:GroupMemberTalksInfo = GroupMemberTalksInfo.init(groupMemberNames: UserInfoManager.sharedInstance.getCurrentUserID(), groupMemberTalks: "", groupMemberTalksCreatedAt: Timestamp(), groupId: taskId, talkId:talkId)
-            for _ in 0 ..< 5 {
+            for _ in 0 ..< 6 {
                 GroupInfoManager.sharedInstance.appendGroupInfoTalksInfo(num: getCurrentGroupNumberFromTappedGroup(), messageInfo: initMessageInfo)
             }
         }

@@ -121,7 +121,7 @@ class TaskInitViewController: UIViewController, UserInfoDelegate {
                             
                             let decodedTask = try Firestore.Decoder().decode(GroupMemberTalksInfo.self, from: document.data())
                             //変換に成功
-                            GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 5)
+                            GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.insert(decodedTask, at: 6)
                             //GroupInfoManager.sharedInstance.getGroupInfoAtRequestTaskId(reqTaskId:decodedTask.groupId).groupMemberTalksInfo.append(decodedTask)
                             //GroupInfoManager.sharedInstance.getGroupInfo(num: groupNum).groupMemberTalksInfo.append(decodedTask)
                             //GroupInfoManager.sharedInstance.appendGroupInfo(groupInfo: decodedTask)
