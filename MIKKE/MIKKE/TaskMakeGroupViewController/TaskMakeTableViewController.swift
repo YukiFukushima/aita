@@ -230,7 +230,7 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
             return
         }
         
-        let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+        let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false, enableBlock: false)
         
         if groupCandidate.GroupMemberNamesInfo.count==0{
             appendUserInfo.groupMemberNames = UserInfoManager.sharedInstance.getUserInfoAtCurrentUserID().friendIds[inputRow]
@@ -346,7 +346,7 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
             groupCandidate.createdAt = Timestamp()      //作成日格納
             groupCandidate.groupName = groupName        //名前格納
             //自分を格納
-            let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+            let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false, enableBlock: false)
             appendUserInfo.groupMemberNames = UserInfoManager.sharedInstance.getCurrentUserID()
             groupCandidate.GroupMemberNamesInfo.append(appendUserInfo)
         }

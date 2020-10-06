@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,6 +15,7 @@
                 <outlet property="addFriendLabel" destination="wXI-Eq-iuI" id="tRm-vV-cB2"/>
                 <outlet property="alwaysPushSettingUiSwitch" destination="bb7-zg-X0u" id="ojp-Uf-M7E"/>
                 <outlet property="deleteDetailStatusBtnState" destination="oe8-3K-CDl" id="vkN-eV-8as"/>
+                <outlet property="enableBlockSwitch" destination="4aZ-nX-rgc" id="zdM-NS-SkI"/>
                 <outlet property="inputDetailStatus" destination="otU-Ki-vLl" id="iKF-9y-55S"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -59,7 +62,7 @@
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="string" keyPath="placeholderText" value="一言メッセージを入力してください"/>
                         <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
-                            <color key="value" systemColor="systemGray3Color" red="0.78039215689999997" green="0.78039215689999997" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="value" systemColor="systemGray3Color"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </textView>
@@ -74,7 +77,7 @@
                 </label>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="hs8-Xx-9GT">
                     <rect key="frame" x="30" y="93.5" width="230" height="85"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="85" id="Wh0-Sn-x6o"/>
                         <constraint firstAttribute="width" constant="230" id="apo-cD-ZtJ"/>
@@ -87,7 +90,7 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                 </textView>
                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="FreeかBusy以外で伝えたいステータスを入力してください。" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8kw-8S-gon">
                     <rect key="frame" x="30" y="267" width="230" height="50"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="230" id="80I-c3-n7H"/>
                         <constraint firstAttribute="height" constant="50" id="C5A-0y-poI"/>
@@ -97,7 +100,7 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                 </textView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oe8-3K-CDl">
-                    <rect key="frame" x="165" y="199" width="74" height="22"/>
+                    <rect key="frame" x="165" y="199" width="72.5" height="22"/>
                     <state key="normal" title="Button" image="trash.slash" catalog="system"/>
                     <connections>
                         <action selector="deleteResultDetailStatus:" destination="-1" eventType="touchUpInside" id="azb-eo-4KX"/>
@@ -110,14 +113,51 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                     <nil key="highlightedColor"/>
                 </label>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.fill.badge.plus" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="J37-KJ-3Qm">
-                    <rect key="frame" x="315" y="328.5" width="30" height="29"/>
+                    <rect key="frame" x="315" y="328" width="30" height="29.5"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="NUn-re-O6B"/>
                         <constraint firstAttribute="width" constant="30" id="tbH-M9-uio"/>
                     </constraints>
                 </imageView>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4aZ-nX-rgc">
+                    <rect key="frame" x="296" y="398" width="51" height="31"/>
+                    <connections>
+                        <action selector="tappedEnableBlockSettingUiSwitch:" destination="-1" eventType="valueChanged" id="nQ7-mD-b7V"/>
+                    </connections>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ブロックする" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gyd-sS-rdr">
+                    <rect key="frame" x="30" y="403" width="104" height="21"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2dc-2i-IMA" customClass="AnimatableButton" customModule="IBAnimatable">
+                    <rect key="frame" x="30" y="597" width="315" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="06e-nv-4rZ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <state key="normal" title="通報する">
+                        <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                            <color key="value" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="19"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                            <real key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="tappedEmergencyBtn:" destination="-1" eventType="touchUpInside" id="NmA-LT-dWj"/>
+                    </connections>
+                </button>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="Jkt-k6-1vJ" firstAttribute="top" secondItem="yMO-Yg-f1Q" secondAttribute="bottom" constant="110" id="4K7-ru-qfl"/>
                 <constraint firstItem="8kw-8S-gon" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="4KS-my-SLS"/>
@@ -128,26 +168,46 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                 <constraint firstItem="wXI-Eq-iuI" firstAttribute="top" secondItem="8kw-8S-gon" secondAttribute="bottom" constant="15" id="JU9-SF-yaK"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="J37-KJ-3Qm" secondAttribute="trailing" constant="30" id="KX4-OP-tcM"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bb7-zg-X0u" secondAttribute="trailing" constant="30" id="LCz-Da-jQQ"/>
+                <constraint firstItem="4aZ-nX-rgc" firstAttribute="top" secondItem="J37-KJ-3Qm" secondAttribute="bottom" constant="40" id="Mlb-Vh-4Wh"/>
                 <constraint firstItem="yMO-Yg-f1Q" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="QdU-Wk-TYU"/>
                 <constraint firstItem="bb7-zg-X0u" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="65" id="T4k-O4-ZH7"/>
                 <constraint firstItem="J37-KJ-3Qm" firstAttribute="top" secondItem="d6j-v6-LDd" secondAttribute="bottom" constant="68" id="W4K-I4-MBv"/>
+                <constraint firstItem="Gyd-sS-rdr" firstAttribute="top" secondItem="wXI-Eq-iuI" secondAttribute="bottom" constant="50" id="cXI-zU-zFJ"/>
                 <constraint firstItem="wXI-Eq-iuI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="cwn-g5-fgm"/>
                 <constraint firstItem="hs8-Xx-9GT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="dDh-l6-Maq"/>
                 <constraint firstItem="otU-Ki-vLl" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="eRL-Dz-K8S"/>
                 <constraint firstItem="d6j-v6-LDd" firstAttribute="leading" secondItem="otU-Ki-vLl" secondAttribute="trailing" constant="10" id="f1T-Zl-2WF"/>
                 <constraint firstItem="otU-Ki-vLl" firstAttribute="top" secondItem="Jkt-k6-1vJ" secondAttribute="bottom" constant="10" id="l9O-Az-tiF"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4aZ-nX-rgc" secondAttribute="trailing" constant="30" id="nJg-tF-BpJ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2dc-2i-IMA" secondAttribute="trailing" constant="30" id="q2i-ms-hDh"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="2dc-2i-IMA" secondAttribute="bottom" constant="20" id="sez-Tt-MQf"/>
+                <constraint firstItem="Gyd-sS-rdr" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="sxr-uM-er8"/>
                 <constraint firstItem="yMO-Yg-f1Q" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="70" id="vVO-D7-z3V"/>
                 <constraint firstItem="oe8-3K-CDl" firstAttribute="leading" secondItem="Jkt-k6-1vJ" secondAttribute="trailing" constant="5" id="wQq-BX-xBL"/>
                 <constraint firstItem="8kw-8S-gon" firstAttribute="top" secondItem="otU-Ki-vLl" secondAttribute="bottom" constant="3" id="xHt-JW-mFY"/>
+                <constraint firstItem="2dc-2i-IMA" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="zfb-rz-dqx"/>
                 <constraint firstItem="Jkt-k6-1vJ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="zlh-HI-fqJ"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <point key="canvasLocation" x="-498.39999999999998" y="129.98500749625188"/>
         </view>
     </objects>
+    <designables>
+        <designable name="2dc-2i-IMA">
+            <size key="intrinsicContentSize" width="70" height="33"/>
+        </designable>
+        <designable name="otU-Ki-vLl">
+            <size key="intrinsicContentSize" width="10" height="33"/>
+        </designable>
+    </designables>
     <resources>
-        <image name="paperplane" catalog="system" width="128" height="121"/>
-        <image name="person.crop.circle.fill.badge.plus" catalog="system" width="128" height="101"/>
-        <image name="trash.slash" catalog="system" width="121" height="128"/>
+        <image name="paperplane" catalog="system" width="128" height="118"/>
+        <image name="person.crop.circle.fill.badge.plus" catalog="system" width="128" height="113"/>
+        <image name="trash.slash" catalog="system" width="115" height="128"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

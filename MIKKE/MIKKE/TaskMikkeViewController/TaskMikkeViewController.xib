@@ -15,6 +15,7 @@
                 <outlet property="currentUserImageView" destination="YT2-aT-L3Y" id="8L4-nd-z9F"/>
                 <outlet property="currentUserName" destination="sfG-kE-Z81" id="R6a-a6-YVP"/>
                 <outlet property="currentUserStatus" destination="bkv-IY-PVW" id="dJy-gV-Vsg"/>
+                <outlet property="mikkeBtnLabel" destination="Isf-bK-jby" id="9wI-re-ZFA"/>
                 <outlet property="paperSwitch" destination="3Rh-eW-NHq" id="cd9-tY-7Sx"/>
                 <outlet property="taskMikkeTableView" destination="LfM-ew-mbK" id="pf7-Wy-SHO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

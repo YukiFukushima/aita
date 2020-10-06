@@ -308,12 +308,12 @@ class TaskAddFriendSearchViewController: UIViewController, UISearchBarDelegate, 
         groupCandidate.groupName = "friend"         //名前格納
         
         ////自分を格納
-        let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+        let appendUserInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false, enableBlock: false)
         appendUserInfo.groupMemberNames = UserInfoManager.sharedInstance.getCurrentUserID()
         groupCandidate.GroupMemberNamesInfo.append(appendUserInfo)
         
         //友達を格納
-        let appendUserFriendInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false)
+        let appendUserFriendInfo:GroupMemberNamesInfo = GroupMemberNamesInfo.init(groupMemberNames: "", status: false, statusMessage: "", alwaysPushEnable: false, enableBlock: false)
         appendUserFriendInfo.groupMemberNames = friendUserId
         groupCandidate.GroupMemberNamesInfo.append(appendUserFriendInfo)
 

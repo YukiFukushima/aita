@@ -290,12 +290,14 @@ class GroupMemberNamesInfo:Codable{
     var status:Bool                 //true(話しができる)/false(話ができない)
     var statusMessage:String        //詳細なステータス
     var alwaysPushEnable:Bool       //true(常に通知を行う)/false(常に通知は行わない)
+    var enableBlock:Bool            //true(ブロック)/false(ブロックではない)
     
-    init(groupMemberNames:String, status:Bool, statusMessage:String, alwaysPushEnable:Bool) {
+    init(groupMemberNames:String, status:Bool, statusMessage:String, alwaysPushEnable:Bool, enableBlock:Bool) {
         self.groupMemberNames = groupMemberNames
         self.status = false
         self.statusMessage = statusMessage
         self.alwaysPushEnable = alwaysPushEnable
+        self.enableBlock = enableBlock
     }
 }
 
@@ -345,7 +347,7 @@ class GroupInfoManager{
     var groupInfo:[GroupInfo] = [GroupInfo(
             taskId:"",
             groupName:"",
-            GroupMemberNamesInfo: [GroupMemberNamesInfo.init(groupMemberNames: "", status:false, statusMessage:"", alwaysPushEnable:false)],
+            GroupMemberNamesInfo: [GroupMemberNamesInfo.init(groupMemberNames: "", status:false, statusMessage:"", alwaysPushEnable:false, enableBlock: false)],
             //groupMemberTalks:[""],
             groupMemberTalksInfo: [GroupMemberTalksInfo.init(groupMemberNames: "", groupMemberTalks: "",
                                                              groupMemberTalksCreatedAt: Timestamp(date:Date()), groupId:"", talkId:"")],
@@ -477,6 +479,31 @@ class GroupInfoManager{
         }
     }
     
+    //引数で渡されたグループ内の現在のユーザーIDのブロック設定を取得する関数
+    func getCurrentUserEnableBlockSettignInCurrentGroup(groupNo:Int) -> Bool{
+        var result:Bool = false
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo.count{
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
+                result = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].enableBlock
+                break
+            }
+        }
+        
+        return result
+    }
+    
+    //引数で渡されたグループ内の現在のユーザーIDのブロック設定を取得する関数
+    func setCurrentUserEnableBlockSettignInCurrentGroup(groupNo:Int, enableBlockSetting:Bool){
+        
+        for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo.count{
+            if GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames==UserInfoManager.sharedInstance.getCurrentUserID(){
+                GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].enableBlock = enableBlockSetting
+                break
+            }
+        }
+    }
+    
     /*
     /* グループリストを保存 */
     func saveGroupInfo(){
@@ -488,6 +515,31 @@ class GroupInfoManager{
         self.groupInfo = GroupInfoRepository.loadGroupInfoUserDefaults()
     }
     */
+}
+
+//----------------------------------------------------
+//  通報用クラス
+//----------------------------------------------------
+class EmergencyInfo:Codable{
+    var name:String
+    var eMail:String
+    var blackName:String
+    var message:String
+    var groupId:String
+    
+    var createdAt:Timestamp
+    var updatedAt:Timestamp
+    
+    init(name:String, eMail:String, blackName:String, message:String, groupId:String, createdAt:Timestamp, updatedAt:Timestamp){
+        self.name = name
+        self.eMail = eMail
+        self.blackName = blackName
+        self.message = message
+        self.groupId = groupId
+        
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
 }
 
 //----------------------------------------------------

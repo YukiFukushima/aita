@@ -10,13 +10,15 @@ import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizerDelegate {
+class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizerDelegate, GroupInfoDelegate {
 
     @IBOutlet weak var inputDetailStatus: UITextView!
     @IBOutlet weak var alwaysPushSettingUiSwitch: UISwitch!
     @IBOutlet weak var deleteDetailStatusBtnState: UIButton!
     @IBOutlet weak var addFriendImage: UIImageView!
     @IBOutlet weak var addFriendLabel: UILabel!
+    @IBOutlet weak var enableBlockSwitch: UISwitch!
+    
     var currentGroupNo:Int = 0
     let db = Firestore.firestore()
     
@@ -24,6 +26,7 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        GroupInfoManager.sharedInstance.delegate = self
     }
 
     //本画面表示時にコールされる関数
@@ -35,6 +38,13 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
             self.alwaysPushSettingUiSwitch.isOn = true
         }else{
             self.alwaysPushSettingUiSwitch.isOn = false
+        }
+        
+        //ブロック設定の状態に従って設定
+        if GroupInfoManager.sharedInstance.getCurrentUserEnableBlockSettignInCurrentGroup(groupNo:currentGroupNo){
+            self.enableBlockSwitch.isOn = true
+        }else{
+            self.enableBlockSwitch.isOn = false
         }
         
         //詳細ステータスをinputDetailStatusに書き込む
@@ -178,6 +188,21 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
         self.saveGroupOfDetailStatusToFirestore()
     }
     
+    //ブロック通知切り替えSw関数
+    @IBAction func tappedEnableBlockSettingUiSwitch(_ sender: Any) {
+        if (sender as AnyObject).isOn{
+            GroupInfoManager.sharedInstance.setCurrentUserEnableBlockSettignInCurrentGroup(groupNo: currentGroupNo, enableBlockSetting: true)
+            //self.setCurrentUserAlwaysPushSettignInCurrentGroup(alwaysPushSetting:true)  //SwOnの処理
+        }else{
+            GroupInfoManager.sharedInstance.setCurrentUserEnableBlockSettignInCurrentGroup(groupNo: currentGroupNo, enableBlockSetting: false)
+            //self.setCurrentUserAlwaysPushSettignInCurrentGroup(alwaysPushSetting:false)  //SwOffの処理
+        }
+        
+        //Firestoreに保存
+        self.saveGroupOfDetailStatusToFirestore()
+    }
+    
+    
     //詳細ステータス消去ボタン押下時関数
     @IBAction func deleteResultDetailStatus(_ sender: Any) {
         //詳細ステータスを空にしてinputDetailStatusに書き込む
@@ -208,5 +233,12 @@ class TaskMikkeDetailStatusViewController: UIViewController, UIGestureRecognizer
         self.saveGroupOfDetailStatusToFirestore()
         
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    //通報ボタン
+    @IBAction func tappedEmergencyBtn(_ sender: Any) {
+        let vc = taskEmergencyViewController()
+        vc.groupId = GroupInfoManager.sharedInstance.getGroupInfo(num: currentGroupNo).taskId
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

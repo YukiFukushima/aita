@@ -24,9 +24,15 @@ class settingTutorialViewController: UIViewController {
         //TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: true)
         
         //初期画面(ログイン画面)に遷移
+        /*
         let vc=TaskLoginViewController()
         vc.modalPresentationStyle = .fullScreen
         self.present(vc, animated: true, completion: nil)
+        */
+        
+        let privacyTutorialVC = PrivacyTutorialViewController()
+        privacyTutorialVC.modalPresentationStyle = .fullScreen
+        self.present(privacyTutorialVC, animated: true, completion: nil)
     }
     
     /*

@@ -48,7 +48,8 @@ class TaskLoginViewController: UIViewController, UserInfoDelegate, UITextFieldDe
         if TutorialViewCompleteRepository.loadTutorialViewCompleteDefaults()==false{
             TutorialViewCompleteRepository.saveTutorialViewCompleteDefaults(tutorialComplete: true) //チュートリアル画面表示済み
             //self.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil) //前の前の画面表示
-            self.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.dismiss(animated: true, completion: nil)
+            self.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?.presentingViewController?
+                .dismiss(animated: true, completion: nil)
         }else{
             self.dismiss(animated: true, completion: nil)   //前の画面表示
         }
@@ -467,4 +468,12 @@ class TaskLoginViewController: UIViewController, UserInfoDelegate, UITextFieldDe
             self.emailNewRegister(email: email, password: password)
         }
     }
+    
+    //利用規約ボタン押下時関数
+    @IBAction func tappedPrivacyBtn(_ sender: Any) {
+        let vc = taskPrivacyViewController()
+        vc.modalPresentationStyle = .fullScreen
+        self.present(vc, animated: true, completion: nil)
+    }
+    
 }

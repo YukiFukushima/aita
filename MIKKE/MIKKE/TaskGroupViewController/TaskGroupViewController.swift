@@ -210,17 +210,21 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     func pushStatusChangeToOtherUser(groupNo:Int){
         var userStatus:Bool = false
         var userAlwaysPushEnable:Bool = false
+        var enableBlockSetting:Bool = false
         
         /* 送信相手のステータスがFreeだったら、Push通知 */
         for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo.count {
             userStatus = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].status
             userAlwaysPushEnable = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].alwaysPushEnable
+            enableBlockSetting = GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].enableBlock
             
             if GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames == UserInfoManager.sharedInstance.getCurrentUserID(){
                 /* NoAction(自分には通知しない) */
             }else if userStatus == false
             &&       userAlwaysPushEnable == false{
                 /* NoAction(ステータスがBusy && 必ず通知する設定ではない人には通知しない) */
+            }else if enableBlockSetting == true{
+                /* NoAction(ブロック設定している人には通知しない) */
             }else{
                 var userToken:String = ""
                 userToken = UserInfoManager.sharedInstance.getTokenAtRequestUserID(reqUserId:GroupInfoManager.sharedInstance.getGroupInfo(num: groupNo).GroupMemberNamesInfo[i].groupMemberNames)

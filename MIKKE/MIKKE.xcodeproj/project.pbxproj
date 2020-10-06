@@ -37,6 +37,10 @@
 		3E5F61E424A316AD007181D0 /* MakeGroupTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5F61E224A316AD007181D0 /* MakeGroupTableViewCell.xib */; };
 		3E5F61E724A3180C007181D0 /* TaskMakeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E5F61E524A3180C007181D0 /* TaskMakeTableViewController.swift */; };
 		3E5F61E824A3180C007181D0 /* TaskMakeTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5F61E624A3180C007181D0 /* TaskMakeTableViewController.xib */; };
+		3E873CC1252C89E800910E26 /* taskEmergencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E873CBF252C89E800910E26 /* taskEmergencyViewController.swift */; };
+		3E873CC2252C89E800910E26 /* taskEmergencyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E873CC0252C89E800910E26 /* taskEmergencyViewController.xib */; };
+		3E873CC7252CB68C00910E26 /* taskPrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E873CC5252CB68C00910E26 /* taskPrivacyViewController.swift */; };
+		3E873CC8252CB68C00910E26 /* taskPrivacyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E873CC6252CB68C00910E26 /* taskPrivacyViewController.xib */; };
 		3EA1CE7B24E8EE4900B2E4C7 /* TaskInitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA1CE7924E8EE4900B2E4C7 /* TaskInitViewController.swift */; };
 		3EA1CE7C24E8EE4900B2E4C7 /* TaskInitViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EA1CE7A24E8EE4900B2E4C7 /* TaskInitViewController.xib */; };
 		3EA6125E2518E34F00AFAB77 /* settingTutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6125C2518E34F00AFAB77 /* settingTutorialViewController.swift */; };
@@ -61,6 +65,8 @@
 		3EE445A124F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EE4459F24F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.swift */; };
 		3EE445A224F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EE445A024F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.xib */; };
 		3EEB2C98252027DA00F7DB40 /* infoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3EEB2C9A252027DA00F7DB40 /* infoPlist.strings */; };
+		3EFC07FF252C7CF600805F9F /* PrivacyTutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFC07FD252C7CF600805F9F /* PrivacyTutorialViewController.swift */; };
+		3EFC0800252C7CF600805F9F /* PrivacyTutorialViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EFC07FE252C7CF600805F9F /* PrivacyTutorialViewController.xib */; };
 		BBC70E78BE0FA07C2CDB65D0 /* Pods_MIKKE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B01279E73AFBDBA3F2C7C599 /* Pods_MIKKE.framework */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +116,10 @@
 		3E5F61E224A316AD007181D0 /* MakeGroupTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MakeGroupTableViewCell.xib; sourceTree = "<group>"; };
 		3E5F61E524A3180C007181D0 /* TaskMakeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskMakeTableViewController.swift; sourceTree = "<group>"; };
 		3E5F61E624A3180C007181D0 /* TaskMakeTableViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskMakeTableViewController.xib; sourceTree = "<group>"; };
+		3E873CBF252C89E800910E26 /* taskEmergencyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = taskEmergencyViewController.swift; sourceTree = "<group>"; };
+		3E873CC0252C89E800910E26 /* taskEmergencyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = taskEmergencyViewController.xib; sourceTree = "<group>"; };
+		3E873CC5252CB68C00910E26 /* taskPrivacyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = taskPrivacyViewController.swift; sourceTree = "<group>"; };
+		3E873CC6252CB68C00910E26 /* taskPrivacyViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = taskPrivacyViewController.xib; sourceTree = "<group>"; };
 		3EA1CE7924E8EE4900B2E4C7 /* TaskInitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskInitViewController.swift; sourceTree = "<group>"; };
 		3EA1CE7A24E8EE4900B2E4C7 /* TaskInitViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskInitViewController.xib; sourceTree = "<group>"; };
 		3EA6125C2518E34F00AFAB77 /* settingTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settingTutorialViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +146,8 @@
 		3EE4459F24F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskMikkeDetailStatusViewController.swift; sourceTree = "<group>"; };
 		3EE445A024F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskMikkeDetailStatusViewController.xib; sourceTree = "<group>"; };
 		3EEB2C99252027DA00F7DB40 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/infoPlist.strings; sourceTree = "<group>"; };
+		3EFC07FD252C7CF600805F9F /* PrivacyTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTutorialViewController.swift; sourceTree = "<group>"; };
+		3EFC07FE252C7CF600805F9F /* PrivacyTutorialViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PrivacyTutorialViewController.xib; sourceTree = "<group>"; };
 		81C1E7AFCEEA7590141A862A /* Pods-TaskFirebaseAuthApp2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskFirebaseAuthApp2.debug.xcconfig"; path = "Target Support Files/Pods-TaskFirebaseAuthApp2/Pods-TaskFirebaseAuthApp2.debug.xcconfig"; sourceTree = "<group>"; };
 		B01279E73AFBDBA3F2C7C599 /* Pods_MIKKE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MIKKE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4660D55451B88E7A973E161 /* Pods-MIKKE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MIKKE.release.xcconfig"; path = "Target Support Files/Pods-MIKKE/Pods-MIKKE.release.xcconfig"; sourceTree = "<group>"; };
@@ -240,6 +252,24 @@
 			path = TaskMakeGroupViewController;
 			sourceTree = "<group>";
 		};
+		3E873CBE252C899200910E26 /* TaskEmergencyViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3E873CBF252C89E800910E26 /* taskEmergencyViewController.swift */,
+				3E873CC0252C89E800910E26 /* taskEmergencyViewController.xib */,
+			);
+			path = TaskEmergencyViewController;
+			sourceTree = "<group>";
+		};
+		3E873CC4252CB63D00910E26 /* TaskPrivacyViewController */ = {
+			isa = PBXGroup;
+			children = (
+				3E873CC5252CB68C00910E26 /* taskPrivacyViewController.swift */,
+				3E873CC6252CB68C00910E26 /* taskPrivacyViewController.xib */,
+			);
+			path = TaskPrivacyViewController;
+			sourceTree = "<group>";
+		};
 		3EA1CE7824E8EDF800B2E4C7 /* TaskInitViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -260,6 +290,8 @@
 				3EA612622518E38C00AFAB77 /* friendTableTutorialViewController.xib */,
 				3EA612662518E3A500AFAB77 /* statusTutorialViewController.swift */,
 				3EA612672518E3A500AFAB77 /* statusTutorialViewController.xib */,
+				3EFC07FD252C7CF600805F9F /* PrivacyTutorialViewController.swift */,
+				3EFC07FE252C7CF600805F9F /* PrivacyTutorialViewController.xib */,
 			);
 			path = TaskTutorialViewController;
 			sourceTree = "<group>";
@@ -286,6 +318,8 @@
 			isa = PBXGroup;
 			children = (
 				3E18F54324CD6F270048E57B /* MIKKE.entitlements */,
+				3E873CC4252CB63D00910E26 /* TaskPrivacyViewController */,
+				3E873CBE252C899200910E26 /* TaskEmergencyViewController */,
 				3ECC2D912510C3C9003C9213 /* TaskTutorialViewController */,
 				3E4E3F5424F54A0C006F3CA1 /* TaskAddFriendSearchViewController */,
 				3E4E3F4F24F549B8006F3CA1 /* TaskAddFriendMethodViewController */,
@@ -444,6 +478,7 @@
 				3E4E3F5824F54A4D006F3CA1 /* TaskAddFriendSearchViewController.xib in Resources */,
 				3E40AE1324DCD778003BCAAB /* TaskMikkeTableViewCell.xib in Resources */,
 				3EA612692518E3A500AFAB77 /* statusTutorialViewController.xib in Resources */,
+				3E873CC8252CB68C00910E26 /* taskPrivacyViewController.xib in Resources */,
 				3ECC2D952510C44B003C9213 /* TaskTutorialViewController.xib in Resources */,
 				3E51F6D124A4D5EB003D60F4 /* TaskGroupTableViewCell.xib in Resources */,
 				3E4E3F5324F54A04006F3CA1 /* TaskAddFriendMethodViewController.xib in Resources */,
@@ -452,10 +487,12 @@
 				3E438E9724A8376400392FD0 /* TaskQRCodeResultViewController.xib in Resources */,
 				3E51F6D524A5B68D003D60F4 /* TaskGroupDetailTableViewCell.xib in Resources */,
 				3ED1988224A10921008A95CB /* Assets.xcassets in Resources */,
+				3EFC0800252C7CF600805F9F /* PrivacyTutorialViewController.xib in Resources */,
 				3ED1989724A10C52008A95CB /* TaskLoginViewController.xib in Resources */,
 				3E438E9324A81EB800392FD0 /* ReadQRCodeViewController.xib in Resources */,
 				3E51F6D924A6119D003D60F4 /* TaskGroupDetailViewController.xib in Resources */,
 				3E5F61DA24A2CA14007181D0 /* TaskEditUserInfoViewController.xib in Resources */,
+				3E873CC2252C89E800910E26 /* taskEmergencyViewController.xib in Resources */,
 				3E5F61DF24A30117007181D0 /* TaskQRCodeViewController.xib in Resources */,
 				3ED1988024A1091D008A95CB /* Main.storyboard in Resources */,
 				3E5244BB24BF0BAD00F3098F /* GoogleService-Info.plist in Resources */,
@@ -521,6 +558,7 @@
 				3EE445A124F146A5004A9CA3 /* TaskMikkeDetailStatusViewController.swift in Sources */,
 				3E51F6D424A5B68D003D60F4 /* TaskGroupDetailTableViewCell.swift in Sources */,
 				3ED1987924A1091D008A95CB /* AppDelegate.swift in Sources */,
+				3E873CC7252CB68C00910E26 /* taskPrivacyViewController.swift in Sources */,
 				3E5F61D924A2CA14007181D0 /* TaskEditUserInfoViewController.swift in Sources */,
 				3ED1989924A10F8F008A95CB /* TaskManager.swift in Sources */,
 				3ED1987B24A1091D008A95CB /* SceneDelegate.swift in Sources */,
@@ -528,10 +566,12 @@
 				3E5F61DE24A30117007181D0 /* TaskQRCodeViewController.swift in Sources */,
 				3EA1CE7B24E8EE4900B2E4C7 /* TaskInitViewController.swift in Sources */,
 				3E51F6D024A4D5EB003D60F4 /* TaskGroupTableViewCell.swift in Sources */,
+				3EFC07FF252C7CF600805F9F /* PrivacyTutorialViewController.swift in Sources */,
 				3E4E3F5224F54A04006F3CA1 /* TaskAddFriendMethodViewController.swift in Sources */,
 				3E51F6D824A6119D003D60F4 /* TaskGroupDetailViewController.swift in Sources */,
 				3EA612632518E38C00AFAB77 /* friendTableTutorialViewController.swift in Sources */,
 				3ECC2D942510C44B003C9213 /* TaskTutorialViewController.swift in Sources */,
+				3E873CC1252C89E800910E26 /* taskEmergencyViewController.swift in Sources */,
 				3ED1989B24A10FCD008A95CB /* UserInfoRepositories.swift in Sources */,
 				3ED1989D24A112BA008A95CB /* TaskGroupViewController.swift in Sources */,
 				3EA612682518E3A500AFAB77 /* statusTutorialViewController.swift in Sources */,
@@ -699,7 +739,7 @@
 				CODE_SIGN_ENTITLEMENTS = MIKKE/MIKKE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.3;
+				CURRENT_PROJECT_VERSION = 1.0.4;
 				DEVELOPMENT_TEAM = X788TS54M5;
 				INFOPLIST_FILE = "$(SRCROOT)/MIKKE/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -723,7 +763,7 @@
 				CODE_SIGN_ENTITLEMENTS = MIKKE/MIKKE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.3;
+				CURRENT_PROJECT_VERSION = 1.0.4;
 				DEVELOPMENT_TEAM = X788TS54M5;
 				INFOPLIST_FILE = "$(SRCROOT)/MIKKE/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
