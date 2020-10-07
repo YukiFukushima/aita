@@ -122,11 +122,16 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.groupImageView.image = UIImage(named: "aita")
         }
         
-        //Freeのメンバーがいるか判定
-        if isExistFreeMember(groupId:groupId)==true{
-            cell.groupLabel.textColor = .systemTeal
-        }else{
+        //カレントユーザーがブロックしているグループはグレー表示
+        if GroupInfoManager.sharedInstance.getCurrentUserEnableBlockSettignInCurrentGroup(groupNo: GroupInfoManager.sharedInstance.getCurrentGroupNumberFromTappedGroup(tappedIndexPathRow: indexPath.row))==true{
             cell.groupLabel.textColor = .darkGray
+        }else{
+            //Freeのメンバーがいるか判定
+            if isExistFreeMember(groupId:groupId)==true{
+                cell.groupLabel.textColor = .systemTeal
+            }else{
+                cell.groupLabel.textColor = .darkGray
+            }
         }
         
         //cell上の今のユーザーのステータス表示

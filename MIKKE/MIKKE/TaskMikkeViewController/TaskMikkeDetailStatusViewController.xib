@@ -125,8 +125,8 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                         <action selector="tappedEnableBlockSettingUiSwitch:" destination="-1" eventType="valueChanged" id="nQ7-mD-b7V"/>
                     </connections>
                 </switch>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ブロックする" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gyd-sS-rdr">
-                    <rect key="frame" x="30" y="403" width="104" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ブロック" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gyd-sS-rdr">
+                    <rect key="frame" x="30" y="403" width="69.5" height="21"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -155,6 +155,13 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                         <action selector="tappedEmergencyBtn:" destination="-1" eventType="touchUpInside" id="NmA-LT-dWj"/>
                     </connections>
                 </button>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="NG" translatesAutoresizingMaskIntoConstraints="NO" id="Dh9-jp-hcf">
+                    <rect key="frame" x="109.5" y="398" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="EPL-k7-Eoa"/>
+                        <constraint firstAttribute="height" constant="30" id="NzE-xn-GX2"/>
+                    </constraints>
+                </imageView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -166,6 +173,7 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="d6j-v6-LDd" secondAttribute="trailing" constant="30" id="CNd-hq-Kug"/>
                 <constraint firstItem="d6j-v6-LDd" firstAttribute="top" secondItem="bb7-zg-X0u" secondAttribute="bottom" constant="142" id="I5a-Mx-jfh"/>
                 <constraint firstItem="wXI-Eq-iuI" firstAttribute="top" secondItem="8kw-8S-gon" secondAttribute="bottom" constant="15" id="JU9-SF-yaK"/>
+                <constraint firstItem="Dh9-jp-hcf" firstAttribute="leading" secondItem="Gyd-sS-rdr" secondAttribute="trailing" constant="10" id="K0H-m5-3yF"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="J37-KJ-3Qm" secondAttribute="trailing" constant="30" id="KX4-OP-tcM"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bb7-zg-X0u" secondAttribute="trailing" constant="30" id="LCz-Da-jQQ"/>
                 <constraint firstItem="4aZ-nX-rgc" firstAttribute="top" secondItem="J37-KJ-3Qm" secondAttribute="bottom" constant="40" id="Mlb-Vh-4Wh"/>
@@ -179,6 +187,7 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
                 <constraint firstItem="d6j-v6-LDd" firstAttribute="leading" secondItem="otU-Ki-vLl" secondAttribute="trailing" constant="10" id="f1T-Zl-2WF"/>
                 <constraint firstItem="otU-Ki-vLl" firstAttribute="top" secondItem="Jkt-k6-1vJ" secondAttribute="bottom" constant="10" id="l9O-Az-tiF"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4aZ-nX-rgc" secondAttribute="trailing" constant="30" id="nJg-tF-BpJ"/>
+                <constraint firstItem="Dh9-jp-hcf" firstAttribute="top" secondItem="wXI-Eq-iuI" secondAttribute="bottom" constant="45" id="nev-dv-xSH"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="2dc-2i-IMA" secondAttribute="trailing" constant="30" id="q2i-ms-hDh"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="2dc-2i-IMA" secondAttribute="bottom" constant="20" id="sez-Tt-MQf"/>
                 <constraint firstItem="Gyd-sS-rdr" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="sxr-uM-er8"/>
@@ -200,6 +209,7 @@ Offの時は、自分のステータスがFreeの時のみ、通知が行われ�
         </designable>
     </designables>
     <resources>
+        <image name="NG" width="240" height="240"/>
         <image name="paperplane" catalog="system" width="128" height="118"/>
         <image name="person.crop.circle.fill.badge.plus" catalog="system" width="128" height="113"/>
         <image name="trash.slash" catalog="system" width="115" height="128"/>
