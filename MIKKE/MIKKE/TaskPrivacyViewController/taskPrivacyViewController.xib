@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="taskPrivacyViewController" customModule="MIKKE" customModuleProvider="target">
             <connections>
+                <outlet property="backBtnLabel" destination="Luc-SA-nNd" id="8Kt-MD-Fan"/>
+                <outlet property="loadingMessageLabel" destination="6zh-a3-ak5" id="Y6o-gv-9WW"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="wkWebView" destination="Fyl-Cf-gq3" id="aLF-df-6G6"/>
             </connections>
@@ -22,7 +24,7 @@
             <subviews>
                 <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fyl-Cf-gq3">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
-                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <wkWebViewConfiguration key="configuration">
                         <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                         <wkPreferences key="preferences"/>
@@ -61,16 +63,31 @@
                         <action selector="tappedBackBtn:" destination="-1" eventType="touchUpInside" id="EKl-9a-2mO"/>
                     </connections>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6zh-a3-ak5">
+                    <rect key="frame" x="75" y="262.5" width="225.5" height="142.5"/>
+                    <string key="text">loading....
+
+しばらくたっても読み込みが
+終わらない場合、
+しばらくしてから、
+アプリを立ち上げ直して、
+もう一度お試しください。</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="6zh-a3-ak5" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="9xx-uL-EF8"/>
                 <constraint firstItem="Luc-SA-nNd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="AZc-RJ-C95"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Luc-SA-nNd" secondAttribute="bottom" constant="30" id="CZf-WN-8ya"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Luc-SA-nNd" secondAttribute="trailing" constant="30" id="FFA-3s-7wG"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Fyl-Cf-gq3" secondAttribute="trailing" id="PUM-SA-WQx"/>
                 <constraint firstItem="Luc-SA-nNd" firstAttribute="top" secondItem="Fyl-Cf-gq3" secondAttribute="bottom" constant="20" id="bFI-Ak-FdD"/>
                 <constraint firstItem="Fyl-Cf-gq3" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="fuD-5a-JVZ"/>
+                <constraint firstItem="6zh-a3-ak5" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="i3Y-6f-w8B"/>
                 <constraint firstItem="Fyl-Cf-gq3" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="sy4-HW-LQL"/>
             </constraints>
             <point key="canvasLocation" x="104.8" y="120.08995502248877"/>

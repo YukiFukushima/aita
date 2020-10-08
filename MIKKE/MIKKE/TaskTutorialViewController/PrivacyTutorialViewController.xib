@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PrivacyTutorialViewController" customModule="MIKKE" customModuleProvider="target">
             <connections>
+                <outlet property="loadingMessageLabel" destination="qV6-mN-QMI" id="DDq-ao-YMN"/>
+                <outlet property="tappedStartBtnLabel" destination="ogz-ub-aLq" id="uy7-m2-slr"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="wkWebView" destination="pKm-eu-Tkh" id="w4e-ii-upD"/>
             </connections>
@@ -28,7 +30,7 @@
                         <subviews>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pKm-eu-Tkh">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
@@ -71,13 +73,28 @@
                                     <action selector="tappedStartBtn:" destination="-1" eventType="touchUpInside" id="St0-vl-u31"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qV6-mN-QMI">
+                                <rect key="frame" x="75" y="262.5" width="225.5" height="142.5"/>
+                                <string key="text">loading....
+
+しばらくたっても読み込みが
+終わらない場合、
+しばらくしてから、
+アプリを立ち上げ直して、
+もう一度お試しください。</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <constraints>
                             <constraint firstItem="pKm-eu-Tkh" firstAttribute="leading" secondItem="BFQ-n6-yRy" secondAttribute="leading" id="2io-fl-OG4"/>
                             <constraint firstAttribute="trailing" secondItem="ogz-ub-aLq" secondAttribute="trailing" constant="30" id="Nxt-5J-azK"/>
                             <constraint firstAttribute="trailing" secondItem="pKm-eu-Tkh" secondAttribute="trailing" id="O4L-tA-AsI"/>
+                            <constraint firstItem="qV6-mN-QMI" firstAttribute="centerY" secondItem="BFQ-n6-yRy" secondAttribute="centerY" id="ZTY-hn-r1H"/>
                             <constraint firstAttribute="bottom" secondItem="ogz-ub-aLq" secondAttribute="bottom" constant="30" id="bZd-JJ-Y5u"/>
                             <constraint firstItem="ogz-ub-aLq" firstAttribute="leading" secondItem="BFQ-n6-yRy" secondAttribute="leading" constant="30" id="hIf-mk-nyt"/>
+                            <constraint firstItem="qV6-mN-QMI" firstAttribute="centerX" secondItem="BFQ-n6-yRy" secondAttribute="centerX" id="heY-E5-QFm"/>
                             <constraint firstItem="pKm-eu-Tkh" firstAttribute="top" secondItem="BFQ-n6-yRy" secondAttribute="top" id="ufC-ZY-ivW"/>
                             <constraint firstItem="ogz-ub-aLq" firstAttribute="top" secondItem="pKm-eu-Tkh" secondAttribute="bottom" constant="20" id="yJh-TL-vpR"/>
                         </constraints>
@@ -93,7 +110,7 @@
                 <constraint firstItem="QpK-e4-K7G" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="uOd-3A-wgt"/>
                 <constraint firstAttribute="bottom" secondItem="QpK-e4-K7G" secondAttribute="bottom" id="y3x-kO-y30"/>
             </constraints>
-            <point key="canvasLocation" x="137.68115942028987" y="98.4375"/>
+            <point key="canvasLocation" x="136.80000000000001" y="97.601199400299862"/>
         </view>
     </objects>
     <designables>
