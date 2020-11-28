@@ -9,6 +9,40 @@
 import Foundation
 
 //各ユーザー情報に格納されているグループ情報を更新するフラグの記憶用(現在は未使用)
+class UserImageUpdateRepository {
+    // UserDefaults に使うキー
+    static var userImageUpdateSelectsKey:String = "user_image_update"
+    
+    static func saveUserImageUpdateDefaults(imageUpdate:String,user_id:String){
+        //Data型に変換処理
+        let encorder = JSONEncoder()
+        let data = try! encorder.encode(imageUpdate)
+        
+        //キーのセット
+        userImageUpdateSelectsKey = "user_image_update" + user_id
+        
+        //UserDefaultsに保存
+        UserDefaults.standard.set(data, forKey: userImageUpdateSelectsKey)
+        
+    }
+    
+    static func loadUserImageUpdateDefaults(user_id:String)->String{
+        let decorder = JSONDecoder()
+        
+        //キーのセット
+        userImageUpdateSelectsKey = "user_image_update" + user_id
+        
+        //UserDefaultsから読み出し
+        guard let data = UserDefaults.standard.data(forKey: userImageUpdateSelectsKey) else{return ""}
+        
+        //dataから[UserInfo]に変換
+        let imageUpdate = try! decorder.decode(String.self, from: data)
+        
+        return imageUpdate
+    }
+}
+
+//各ユーザー情報に格納されているグループ情報を更新するフラグの記憶用(現在は未使用)
 class UserGroupUpdateRepository {
     // UserDefaults に使うキー
     static let userGroupUpdateSelectsKey:String = "user_group_update"

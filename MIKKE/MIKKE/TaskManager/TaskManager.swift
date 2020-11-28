@@ -13,6 +13,7 @@ import FirebaseFirestoreSwift
 import FirebaseStorage
 import FirebaseUI
 import LinkPresentation
+import SwiftDate
 
 //----------------------------------------------------
 //  ユーザー管理タスク
@@ -639,7 +640,46 @@ extension UIViewController{
         //"ユーザーID.png"の名前のレファレンスを取得
         let userRef = storageRef.child("userImages/\(userId).png")
         
+        //メタデータチェック
+        userRef.getMetadata { metadata, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+            print(error)
+          } else {
+            // Metadata now contains the metadata for 'images/forest.jpg'
+            
+            //端末に記憶しているユーザーIDの画像ダウンロード最終更新日を取得
+            let date:String = UserImageUpdateRepository.loadUserImageUpdateDefaults(user_id: userId)
+            
+            //update日取得
+            guard let metadataUpdated = metadata?.updated else{return}
+            
+            //文字列に変換
+            let metadataUpdatedFormatted:String = metadataUpdated.convertTo(region: Region.local).toFormat("yyyy-MM-dd HH:mm:ss")
+            
+            //チェック
+            if metadataUpdatedFormatted == date{
+                /* ForDebug *
+                print("イコール:updated")
+                print(metadataUpdated)
+                * EndForDebug */
+            }else{
+                //ユーザーIDの画像をダウンロードした最終更新日を更新
+                UserImageUpdateRepository.saveUserImageUpdateDefaults(imageUpdate: metadataUpdatedFormatted, user_id: userId)
+                
+                /* ForDebug *
+                print("クリア")
+                print(metadataUpdatedFormatted)
+                print("日付")
+                print(date)
+                 * EndForDebug */
+                
+                SDImageCache.shared.clearMemory()
+                SDImageCache.shared.clearDisk()
+            }
+          }
+        }
+        
         return userRef
     }
-    
 }

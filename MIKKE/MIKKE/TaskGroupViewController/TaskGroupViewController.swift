@@ -10,12 +10,14 @@ import UIKit
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
+import FirebaseUI
 
 class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UserInfoDelegate {
 
     @IBOutlet weak var taskGroupTableView: UITableView!
     let db = Firestore.firestore()
     var listner:ListenerRegistration? = nil
+    var imageDownloadCounter:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +36,7 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     /* 再描画 */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-                
+        
         self.taskGroupTableView.reloadData()    //監視後のロードとダブるけどViewの更新はとにかく早くする
         self.observeRealTimeFirestore()         //Firestoreを監視
         
@@ -308,16 +310,17 @@ class TaskGroupViewController: UIViewController, UITableViewDelegate, UITableVie
     // ユーザー画像の表示関数
     func viewNameImage(reqUSerId:String, currentUserImageView: UIImageView){
         let userRef = self.getRequestUserRef(userId:reqUSerId)
+
         downloadFromCloudStorage(userRef:userRef, currentUserImageView:currentUserImageView)
     }
     
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference, currentUserImageView:UIImageView){
         //placeholderの役割を果たす画像をセット
-        let placeholderImage = UIImage(systemName: "photo")
+        //let placeholderImage = UIImage(systemName: "photo")
         
         //読み込み
-        currentUserImageView.sd_setImage(with: userRef, placeholderImage: placeholderImage)
+        currentUserImageView.sd_setImage(with: userRef, placeholderImage: nil)
     }
     
     //Firestoreへの保存

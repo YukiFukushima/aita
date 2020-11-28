@@ -117,10 +117,10 @@ class ViewController: UIViewController, UserInfoDelegate{
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference){
         //placeholderの役割を果たす画像をセット
-        let placeholderImage = UIImage(systemName: "photo")
+        //let placeholderImage = UIImage(systemName: "photo")
         
         //読み込み
-        nameImageView.sd_setImage(with: userRef, placeholderImage: placeholderImage)
+        nameImageView.sd_setImage(with: userRef, placeholderImage: nil)
         
         //読み込み(プロフィールの編集に渡す時の為にLocalに保存)
         localNameImageView = nameImageView

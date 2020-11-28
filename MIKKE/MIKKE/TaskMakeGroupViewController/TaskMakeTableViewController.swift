@@ -254,10 +254,10 @@ class TaskMakeTableViewController: UIViewController, UITableViewDelegate, UITabl
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference, cellImage:UIImageView){
         //placeholderの役割を果たす画像をセット
-        let placeholderImage = UIImage(systemName: "photo")
+        //let placeholderImage = UIImage(systemName: "photo")
         
         //読み込み
-        cellImage.sd_setImage(with: userRef, placeholderImage: placeholderImage)
+        cellImage.sd_setImage(with: userRef, placeholderImage: nil)
     }
     
     //Firestoreからのデータ(ユーザ情報)の読み込み

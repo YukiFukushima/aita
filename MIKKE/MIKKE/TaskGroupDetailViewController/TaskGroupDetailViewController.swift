@@ -76,6 +76,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         self.tabBarController?.tabBar.isHidden = true
         self.deActivateCommitBtn()
     }
@@ -300,10 +301,10 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference, cellImage:UIImageView){
         //placeholderの役割を果たす画像をセット
-        let placeholderImage = UIImage(systemName: "photo")
+        //let placeholderImage = UIImage(systemName: "photo")
         
         //読み込み
-        cellImage.sd_setImage(with: userRef, placeholderImage: placeholderImage)
+        cellImage.sd_setImage(with: userRef, placeholderImage: nil)
     }
     
     /* テーブルビューを一番後ろから表示させる関数 */

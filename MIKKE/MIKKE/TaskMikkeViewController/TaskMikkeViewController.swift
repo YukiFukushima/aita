@@ -275,10 +275,10 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference, currentUserImageView:UIImageView){
         //placeholderの役割を果たす画像をセット
-        let placeholderImage = UIImage(systemName: "photo")
+        //let placeholderImage = UIImage(systemName: "photo")
         
         //読み込み
-        currentUserImageView.sd_setImage(with: userRef, placeholderImage: placeholderImage)
+        currentUserImageView.sd_setImage(with: userRef, placeholderImage: nil)
     }
     
     // ユーザーの名前の表示関数
