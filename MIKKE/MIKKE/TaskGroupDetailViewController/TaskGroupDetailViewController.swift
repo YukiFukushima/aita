@@ -514,6 +514,9 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         
         let newMessageInfo:GroupMemberTalksInfo = GroupMemberTalksInfo.init(groupMemberNames: UserInfoManager.sharedInstance.getCurrentUserID(), groupMemberTalks: message, groupMemberTalksCreatedAt: Timestamp(), groupId: taskId, talkId: talkId)
         
+        var userStatus:Bool = false
+        var userAlwaysPushEnable:Bool = false
+        
         /* 最初に空配列を入れてKeyboardが押し上げた時に隠れないようにする */
         if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo.count==0{
             let initMessageInfo:GroupMemberTalksInfo = GroupMemberTalksInfo.init(groupMemberNames: UserInfoManager.sharedInstance.getCurrentUserID(), groupMemberTalks: "", groupMemberTalksCreatedAt: Timestamp(), groupId: taskId, talkId:talkId)
@@ -531,10 +534,15 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         
         /* 送信相手のステータスがFreeだったら、Push通知 */
         for i in 0 ..< GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo.count {
+            
+            userStatus = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].status
+            userAlwaysPushEnable = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].alwaysPushEnable
+            
             if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames == UserInfoManager.sharedInstance.getCurrentUserID(){
                 /* NoAction(自分には通知しない) */
-            }else if GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].status == false{
-                /* NoAction(ステータスがBusyの人には通知しない) */
+            }else if userStatus == false
+            &&       userAlwaysPushEnable == false{
+                /* NoAction(ステータスがBusy && 必ず通知する設定ではない人には通知しない) */
             }else{
                 var userToken:String = ""
                 userToken = UserInfoManager.sharedInstance.getTokenAtRequestUserID(reqUserId:GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[i].groupMemberNames)
