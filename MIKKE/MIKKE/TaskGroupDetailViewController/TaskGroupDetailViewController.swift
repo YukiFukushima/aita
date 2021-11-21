@@ -14,7 +14,7 @@ import FirebaseStorage
 import FirebaseUI
 import SwiftDate
 
-class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UITextViewDelegate {
+class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UITextViewDelegate, UserInfoDelegate {
     
     @IBOutlet weak var taskGroupDetailTableView: UITableView!
     @IBOutlet weak var inputTextField: UITextView!
@@ -30,9 +30,16 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 15.0, *) {
+            view.keyboardLayoutGuide.topAnchor.constraint(equalToSystemSpacingBelow: inputTextField.bottomAnchor, multiplier: 1.0).isActive = true
+        } else {
+            // Fallback on earlier versions
+        }
+        
         taskGroupDetailTableView.delegate = self
         taskGroupDetailTableView.dataSource = self
         GroupInfoManager.sharedInstance.delegate = self
+        UserInfoManager.sharedInstance.delegate = self
         inputTextField.delegate = self
         configureTableViewCell()
         setupNavigationBar()
@@ -130,6 +137,9 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
     
     // キーボードが退場した通知を受けた時に実行されるメソッド
     @objc func keyboardDidHide(_ notification: Notification) {
+        self.taskGroupDetailTableView.reloadData()                    //再描画
+        self.dispTableViewFromBottom()                                // tableViewを後ろから表示
+        
         /* 後々の勉強のために残しておく
         print("keyboardDidHide")
         
@@ -276,14 +286,24 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
             cell.dateLabel.text = ""
             cell.postName.text = ""
         }else{
-            cell.groupDetailTextView.textColor = .black
-            cell.groupDetailTextView.backgroundColor = .white
+            //cell.groupDetailTextView.textColor = .black
+            //cell.groupDetailTextView.backgroundColor = .white
+            
             cell.groupDetailTextView.text = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo[indexPath.row].groupMemberTalks
             cell.groupDetailTextView.font = .monospacedSystemFont(ofSize: 16, weight: .thin)
             //cell.GroupDetailImageView.image = UIImage(named: "SpongeBob")
             let userId = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo[indexPath.row].groupMemberNames
             let userRef = self.getRequestUserRef(userId:userId)                             //会話メンバーIDのリファレンスを取得
             downloadFromCloudStorage(userRef:userRef, cellImage: cell.GroupDetailImageView) //会話メンバーの画像を表示
+            
+            if userId == UserInfoManager.sharedInstance.getCurrentUserID(){
+                cell.groupDetailTextView.backgroundColor = UIColor.hex(string: "#42ffff", alpha: 1)
+                //cell.groupDetailTextView.backgroundColor = UIColor.hex(string: "#cca6bf", alpha: 1)
+                cell.groupDetailTextView.textColor = .black
+            }else{
+                cell.groupDetailTextView.backgroundColor = .white
+                cell.groupDetailTextView.textColor = .black
+            }
             
             let date:Date = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).groupMemberTalksInfo[indexPath.row].groupMemberTalksCreatedAt.dateValue()
             cell.dateLabel.text = date.convertTo(region: Region.local).toFormat("yyyy-MM-dd HH:mm:ss")

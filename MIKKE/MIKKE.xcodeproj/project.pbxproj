@@ -148,10 +148,8 @@
 		3EEB2C99252027DA00F7DB40 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/infoPlist.strings; sourceTree = "<group>"; };
 		3EFC07FD252C7CF600805F9F /* PrivacyTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTutorialViewController.swift; sourceTree = "<group>"; };
 		3EFC07FE252C7CF600805F9F /* PrivacyTutorialViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PrivacyTutorialViewController.xib; sourceTree = "<group>"; };
-		81C1E7AFCEEA7590141A862A /* Pods-TaskFirebaseAuthApp2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskFirebaseAuthApp2.debug.xcconfig"; path = "Target Support Files/Pods-TaskFirebaseAuthApp2/Pods-TaskFirebaseAuthApp2.debug.xcconfig"; sourceTree = "<group>"; };
 		B01279E73AFBDBA3F2C7C599 /* Pods_MIKKE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MIKKE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4660D55451B88E7A973E161 /* Pods-MIKKE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MIKKE.release.xcconfig"; path = "Target Support Files/Pods-MIKKE/Pods-MIKKE.release.xcconfig"; sourceTree = "<group>"; };
-		F24184D157CE7535DC2D7FF5 /* Pods-TaskFirebaseAuthApp2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskFirebaseAuthApp2.release.xcconfig"; path = "Target Support Files/Pods-TaskFirebaseAuthApp2/Pods-TaskFirebaseAuthApp2.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,8 +167,6 @@
 		2722D206E930219C62256B6B /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				81C1E7AFCEEA7590141A862A /* Pods-TaskFirebaseAuthApp2.debug.xcconfig */,
-				F24184D157CE7535DC2D7FF5 /* Pods-TaskFirebaseAuthApp2.release.xcconfig */,
 				29D68639C5A6D21A1998177B /* Pods-MIKKE.debug.xcconfig */,
 				D4660D55451B88E7A973E161 /* Pods-MIKKE.release.xcconfig */,
 			);
@@ -739,14 +735,14 @@
 				CODE_SIGN_ENTITLEMENTS = MIKKE/MIKKE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.11;
+				CURRENT_PROJECT_VERSION = 1.0.12;
 				DEVELOPMENT_TEAM = X788TS54M5;
 				INFOPLIST_FILE = "$(SRCROOT)/MIKKE/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fukushima.AITA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -763,14 +759,14 @@
 				CODE_SIGN_ENTITLEMENTS = MIKKE/MIKKE.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.11;
+				CURRENT_PROJECT_VERSION = 1.0.12;
 				DEVELOPMENT_TEAM = X788TS54M5;
 				INFOPLIST_FILE = "$(SRCROOT)/MIKKE/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fukushima.AITA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

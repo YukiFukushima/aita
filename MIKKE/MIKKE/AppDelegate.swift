@@ -14,7 +14,7 @@ import IQKeyboardManagerSwift
 import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate/*, MessagingDelegate*/ {
 
     var notificationGranted = true
     
@@ -24,6 +24,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         //Firebase Cloud Messaging用
+        
+        // [START set_messaging_delegate]
+        Messaging.messaging().delegate = self
+        // [END set_messaging_delegate]
+        
+        
+        if #available(iOS 10.0, *) {
+            // For iOS 10 display notification (sent via APNS)
+            UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: { _, _ in }
+            )
+        } else {
+            let settings: UIUserNotificationSettings =
+            UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
+        
+        
+        
+        /*
         if #available(iOS 13.5, *){
             UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
             
@@ -42,9 +68,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("granted, but Error in notifacation permission:\(error.localizedDescription)")
             }
         }
+        */
+        
         //Firebase Cloud Messaging用終わり
         
         //端末毎のTokenの取得
+        /*
         InstanceID.instanceID().instanceID { (result, error) in
             if let error = error{
                 print("Error fetching remote instance ID:\(error)")
@@ -53,8 +82,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 UserTokenRepository.saveUserTokenUserDefaults(userToken: result.token)
             }
         }
+        */
         
         //registerForPushNotifications()                        /* もう一つのPush通知の方法(うまくいかなかった) */
+        
+        func applicationWillResignActive(_ application: UIApplication) {
+            // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+            // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        }
+        
+        func applicationDidEnterBackground(_ application: UIApplication) {
+            // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+            // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        }
+        
+        func applicationWillEnterForeground(_ application: UIApplication) {
+            // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        }
+        
+        func applicationDidBecomeActive(_ application: UIApplication) {
+            // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        }
+        
+        func applicationWillTerminate(_ application: UIApplication) {
+            // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        }
         
         UIApplication.shared.applicationIconBadgeNumber = 0     /* バッジを消す */
         IQKeyboardManager.shared.enable = true                  /* キーボード自動調整 */
@@ -136,6 +188,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 //Firebase Cloud Messaging用
+
 @available(iOS 10, *)
 extension AppDelegate:UNUserNotificationCenterDelegate{
     // アプリがフォアグラウンドで起動している際にプッシュ通知が届いたら呼ばれる。
@@ -209,6 +262,25 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
         //print(userInfo)
         
         completionHandler()
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    // fcmTokenを受け取った時に呼ばれる。
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        if let uid = Auth.auth().currentUser?.uid {
+            self.setFcmToken(userId: uid, fcmToken: fcmToken)
+        }
+    }
+    
+    func setFcmToken(userId: String, fcmToken: String) {
+        print("Remote instance ID token:\(fcmToken)")
+        UserTokenRepository.saveUserTokenUserDefaults(userToken: fcmToken)
+        /*
+        let reference = Database.database().reference().child("user").child(userId).child("fcm_token")
+        UserDefaults.standard.set(fcmToken, forKey: "fcmToken")
+        reference.setValue(fcmToken)
+        */
     }
 }
 //Firebase Cloud Messaging用終わり
