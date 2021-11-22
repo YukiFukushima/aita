@@ -36,6 +36,13 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
             // Fallback on earlier versions
         }
         
+        //画面の向きが変わったことを通知する
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.changedOrientation),
+            name: UIDevice.orientationDidChangeNotification,
+            object: nil)
+        
         taskGroupDetailTableView.delegate = self
         taskGroupDetailTableView.dataSource = self
         GroupInfoManager.sharedInstance.delegate = self
@@ -106,6 +113,12 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         //画面上部のナビゲーションバーの左側にTalkボタンを設置し、押されたらログアウト関数がcallされるようにする
         //let leftButtonItem = UIBarButtonItem(title: "Talk", style: .done, target: self, action: #selector(talkView))
         //navigationItem.leftBarButtonItem = leftButtonItem
+    }
+    
+    // 画面の向きが変わった時に呼ばれる
+    @objc func changedOrientation() {
+        //print("画面の向きが変わった")
+        self.cofigureBackgroundImage()          // 背景画像再設定
     }
     
     // Talkボタンをタップしたときの動作
@@ -247,6 +260,7 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         //背景画像をセット
         imageView.image = image
         imageView.addSubview(visualEffectView)
+        imageView.contentMode = .scaleToFill
         taskGroupDetailTableView.backgroundView = imageView
     }
     
