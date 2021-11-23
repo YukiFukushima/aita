@@ -18,7 +18,8 @@ class SendMessage {
         
         let postMessage: [String: Any] = [
             "to": userIdToken,
-            "priority": "high", // highにするとアプリが非起動時・バックグラウンドでも通知が来る
+            "priority": "high",         // highにするとアプリが非起動時・バックグラウンドでも通知が来る
+            "content_available" : true, // こうすることでバックグラウンド時にdidReceiveRemoteNotificationが呼ばれる
             "notification": [
                 "badge": 1,
                 "body": body,

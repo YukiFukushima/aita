@@ -12,6 +12,7 @@ import UserNotificationsUI
 import Firebase
 import IQKeyboardManagerSwift
 import UserNotifications
+import AudioToolbox
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate/*, MessagingDelegate*/ {
@@ -108,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate/*, MessagingDelegate*/ {
             // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         }
         
-        UIApplication.shared.applicationIconBadgeNumber = 0     /* バッジを消す */
+        //UIApplication.shared.applicationIconBadgeNumber = 0     /* バッジを消す(ここで消すとバックグラウンドからの通知時すぐに消してしまう) */
         IQKeyboardManager.shared.enable = true                  /* キーボード自動調整 */
         IQKeyboardManager.shared.enableAutoToolbar = false      /* ツールバーを消す */
         
@@ -154,18 +155,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate/*, MessagingDelegate*/ {
     */
     
     //Firebase Cloud Messaging用
+    //下があればこちらはいらないかもしれない
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
         if let messageID = userInfo["gcm.message_id"]{
-            print("MessageID:\(messageID)")
+            print("MessageID1:\(messageID)")
         }
         //print(userInfo)
     }
     
+    //アプリがバックグラウンド時にプッシュ通知が届いたら呼ばれる。
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo["gem.message_id"]{
-            print("MessageID:\(messageID)")
+            print("MessageID2:\(messageID)")
         }
         //print(userInfo)
+        
+        //バイブを鳴らす
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
         
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -218,6 +224,9 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
         }
         //print(userInfo)
         
+        //バイブを鳴らす
+        AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
         completionHandler([])
     }
     
@@ -229,6 +238,9 @@ extension AppDelegate:UNUserNotificationCenterDelegate{
         if let messageID = userInfo["gcm.message_id"]{
             print("Message ID:\(messageID)")
         }
+        
+        // バッジを消す
+        UIApplication.shared.applicationIconBadgeNumber = 0
         
         //title取得
         let userTitle = response.notification.request.content.title
