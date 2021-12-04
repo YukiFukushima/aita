@@ -225,15 +225,62 @@ class TaskEditUserInfoViewController: UIViewController, UserInfoDelegate, UIText
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         print("撮影もしくは画像を選択したよ!")
         if let pickedImage = info[.originalImage] as? UIImage{
+            resultImageView.image = self.generateThumbnail(sourceImage: pickedImage, objectiveEdgeLength: 200)
+            resultImageView.contentMode = .scaleAspectFill
+            /*
             //撮影or選択した画像をimageViewの中身に入れる
             //resultImageView.image = pickedImage
             resultImageView.image = pickedImage.resize(toWidth: 170)
+            
             //resultImageView.contentMode = .scaleAspectFit
             resultImageView.contentMode = .scaleAspectFill
+            */
         }
         //表示した画面を閉じる処理
         picker.dismiss(animated: true, completion: nil)
     }
+    
+    /* サムネイル画像取得関数群 */
+    func generateThumbnail(sourceImage: UIImage, objectiveEdgeLength: CGFloat) -> UIImage {
+        let resizedWidth: CGFloat = calculateResizedWidth(sourceImage: sourceImage, objectiveLengthOfShortSide: objectiveEdgeLength)
+        let resizedImage: UIImage = resizeImage(sourceImage: sourceImage, objectiveWidth: resizedWidth)
+        let thumbnailSize: CGSize = CGSize(width: objectiveEdgeLength, height: objectiveEdgeLength)
+        let croppingRect: CGRect = calulateCroppingRect(imgae: resizedImage, objectiveSize: thumbnailSize)
+        let croppedImage: UIImage = cropImage(image: resizedImage, croppingRect: croppingRect)
+        return croppedImage
+    }
+    
+    func calculateResizedWidth(sourceImage: UIImage, objectiveLengthOfShortSide: CGFloat) -> CGFloat {
+        let width: CGFloat = sourceImage.size.width
+        let height: CGFloat = sourceImage.size.height
+        let resizedWidth: CGFloat = width <= height ? objectiveLengthOfShortSide : objectiveLengthOfShortSide * width / height
+        return resizedWidth
+    }
+    
+    func resizeImage(sourceImage: UIImage, objectiveWidth: CGFloat) -> UIImage {
+        let aspectScale: CGFloat = sourceImage.size.height / sourceImage.size.width
+        let resizedSize: CGSize = CGSize(width: objectiveWidth, height: objectiveWidth * aspectScale)
+        
+        // リサイズ後のUIImageを生成して返却
+        UIGraphicsBeginImageContext(resizedSize)
+        sourceImage.draw(in: CGRect(x: 0, y: 0, width: resizedSize.width, height: resizedSize.height))
+        let resizedImage: UIImage? = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resizedImage!
+    }
+    
+    func calulateCroppingRect(imgae: UIImage, objectiveSize: CGSize) -> CGRect {
+        let croppingRect: CGRect = CGRect.init(x: (imgae.size.width - objectiveSize.width) / 2, y: (imgae.size.height - objectiveSize.height) / 2, width: objectiveSize.width, height: objectiveSize.height)
+        return croppingRect
+    }
+
+    func cropImage(image: UIImage, croppingRect: CGRect) -> UIImage {
+            let croppingRef: CGImage? = image.cgImage!.cropping(to: croppingRect)
+            let croppedImage: UIImage = UIImage(cgImage: croppingRef!)
+            return croppedImage
+    }
+    /* サムネイル画像取得関数群終わり */
     
     //写真をcloudにupdateする関数
     func uploadCloudStorage(){
@@ -276,12 +323,23 @@ class TaskEditUserInfoViewController: UIViewController, UserInfoDelegate, UIText
                     //アップロード時の画像のサイズ
                     print("\(size):size")
                     
+                    //キャッシュ削除
+                    userRef.downloadURL { (url, error) in
+                        guard let url = url else { return }
+                        self.resultImageView.sd_setImage(with: url, placeholderImage: nil, options: SDWebImageOptions.refreshCached, context: nil)
+                        
+                        //同期処理終了
+                        self.dispatchGroup.leave()
+                    }
+                    
+                    /*
                     //画像アップ時に端末のキャッシュ削除することで、画像変更時の反映が素早くなる（SDWebImageはFirebaseUIが採用しているライブラリ）
                     SDImageCache.shared.clearMemory()
                     SDImageCache.shared.clearDisk()
                     
                     //同期処理終了
                     self.dispatchGroup.leave()
+                    */
                 }
             }
         }

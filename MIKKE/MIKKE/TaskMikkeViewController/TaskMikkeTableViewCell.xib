@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -42,10 +42,18 @@
                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="pV9-sB-SCw">
+                        <rect key="frame" x="393" y="90" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="50" id="QGa-kG-CAU"/>
+                            <constraint firstAttribute="height" constant="50" id="cYz-fB-gzS"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="nXC-72-Qyk" firstAttribute="leading" secondItem="gHX-B3-ltQ" secondAttribute="trailing" constant="30" id="3dJ-m7-64q"/>
                     <constraint firstItem="aAU-0j-bm0" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="55" id="D5x-le-yd1"/>
+                    <constraint firstItem="pV9-sB-SCw" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Nif-rb-A0h"/>
                     <constraint firstItem="aAU-0j-bm0" firstAttribute="leading" secondItem="gHX-B3-ltQ" secondAttribute="trailing" constant="30" id="YhA-3e-USC"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Jbf-T2-NJm" secondAttribute="trailing" constant="50" id="dbW-fQ-T8g"/>
                     <constraint firstItem="Jbf-T2-NJm" firstAttribute="top" secondItem="aAU-0j-bm0" secondAttribute="bottom" constant="15" id="gLP-5M-8tI"/>
@@ -53,6 +61,7 @@
                     <constraint firstItem="nXC-72-Qyk" firstAttribute="top" secondItem="Jbf-T2-NJm" secondAttribute="bottom" constant="15" id="nIo-uL-KnT"/>
                     <constraint firstItem="gHX-B3-ltQ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="5" id="oJs-9p-t1P"/>
                     <constraint firstItem="gHX-B3-ltQ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="xNg-R8-Vyh"/>
+                    <constraint firstAttribute="trailing" secondItem="pV9-sB-SCw" secondAttribute="trailing" constant="10" id="xQS-1f-cPO"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -60,9 +69,13 @@
                 <outlet property="userDetailStatusLabel" destination="nXC-72-Qyk" id="j1W-2D-DtV"/>
                 <outlet property="userImageView" destination="gHX-B3-ltQ" id="Uzl-aJ-IY6"/>
                 <outlet property="userNameLabel" destination="aAU-0j-bm0" id="J89-FO-wkw"/>
+                <outlet property="userPostImageView" destination="pV9-sB-SCw" id="XpO-8V-ej0"/>
                 <outlet property="userStatusLabel" destination="Jbf-T2-NJm" id="TEQ-7t-yqq"/>
             </connections>
             <point key="canvasLocation" x="-36.956521739130437" y="63.616071428571423"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="camera" width="500" height="350"/>
+    </resources>
 </document>

@@ -14,6 +14,7 @@ class TaskMikkeTableViewCell: UITableViewCell {
     @IBOutlet weak var userImageView: UIImageView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var userDetailStatusLabel: UILabel!
+    @IBOutlet weak var userPostImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -11,6 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import FirebaseStorage
+import FirebaseUI
 import RAMPaperSwitch
 
 class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UserInfoDelegate {
@@ -204,7 +205,25 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         //一言メッセージの表示
         cell.userDetailStatusLabel.text = userDetailStatus
         
+        /* グループメンバー追加画像タップ時イベント設定 */
+        cell.userPostImageView.isUserInteractionEnabled = true
+        cell.userPostImageView.tag = indexPath.row
+        cell.userPostImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(userPostImageIconTapped)))
+        
         return cell
+    }
+    
+    /* ユーザー投稿確認アイコンがクリックされた時にCallされる関数 */
+    @objc func userPostImageIconTapped(sender:UITapGestureRecognizer){
+        guard let inputRow=sender.view?.tag else {return}
+        let vc = taskConfirmUserPhotoViewController()
+        
+        let groupId:String = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId
+        let tappedUserId:String = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[inputRow].groupMemberNames
+        
+        vc.groupId = groupId
+        vc.userId = tappedUserId
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     // タップされたindexPathから現在のグループ番号を取得する関数

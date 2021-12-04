@@ -592,6 +592,25 @@ extension UIImage{
     //画像をリサイズする処理
     func resize(toWidth width:CGFloat) ->UIImage?{
         //描画するサイズを指定
+        let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
+        //let canvasSize = CGSize(width: width, height: width)    //正方形に！
+        
+        //Contextを開始
+        UIGraphicsBeginImageContextWithOptions(canvasSize, false, scale)
+        
+        //遅延実行(defer内部で書かれた処理は、スコープを抜けるときに呼ばれる)
+        defer {
+            //Contextを終了
+            UIGraphicsEndImageContext()
+        }
+        //指定されたサイズのCGRectで描画
+        draw(in: CGRect(origin: .zero, size: canvasSize))
+        
+        //リサイズされた画像を戻り値として返す
+        return UIGraphicsGetImageFromCurrentImageContext()
+        
+        /*
+        //描画するサイズを指定
         //let canvasSize = CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))
         let canvasSize = CGSize(width: width, height: width)    //正方形に！
         
@@ -608,7 +627,10 @@ extension UIImage{
         
         //リサイズされた画像を戻り値として返す
         return UIGraphicsGetImageFromCurrentImageContext()
+        */
     }
+    
+    
 }
 
 extension UIViewController{
@@ -677,6 +699,69 @@ extension UIViewController{
                 SDImageCache.shared.clearMemory()
                 SDImageCache.shared.clearDisk()
             }
+          }
+        }
+        
+        return userRef
+    }
+    
+    //引数で指定されたユーザー投稿写真IDの保存先のRefを取得する関数
+    func getRequestUserPostImageRef(userId:String, directory:String) -> StorageReference{
+        //CloudStorageをインスタンス化
+        let storage = Storage.storage()
+        
+        //ルートのレファレンスを作成
+        let storageRef = storage.reference()
+        
+        //"ユーザーID.png"の名前のレファレンスを取得
+        //let userRef = storageRef.child("userPostImages/\(userId).png")
+        //let userRef = storageRef.child(directory+"/\(userId).png")
+        let userRef = storageRef.child(directory).child("\(userId).png")
+        
+        //メタデータチェック
+        userRef.getMetadata { metadata, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+            print(error)
+          } else {
+              
+            // Metadata now contains the metadata for 'images/forest.jpg'
+            
+            
+            //端末に記憶しているユーザーIDの画像ダウンロード最終更新日を取得
+            //let date:String = UserImageUpdateRepository.loadUserImageUpdateDefaults(user_id: userId)
+            
+            //update日取得
+            guard let metadataUpdated = metadata?.updated else{return}
+            
+            //文字列に変換
+            let metadataUpdatedFormatted:String = metadataUpdated.convertTo(region: Region.local).toFormat("yyyy-MM-dd HH:mm:ss")
+            
+            //SDImageCache.shared.clearMemory()
+            //SDImageCache.shared.clearDisk()
+              
+            /*
+            //チェック
+            if metadataUpdatedFormatted == date{
+                /* ForDebug *
+                print("イコール:updated")
+                print(metadataUpdated)
+                * EndForDebug */
+            }else{
+                //ユーザーIDの画像をダウンロードした最終更新日を更新
+                //UserImageUpdateRepository.saveUserImageUpdateDefaults(imageUpdate: metadataUpdatedFormatted, user_id: userId)
+                
+                /* ForDebug *
+                print("クリア")
+                print(metadataUpdatedFormatted)
+                print("日付")
+                print(date)
+                 * EndForDebug */
+                
+                SDImageCache.shared.clearMemory()
+                SDImageCache.shared.clearDisk()
+            }
+            */
           }
         }
         

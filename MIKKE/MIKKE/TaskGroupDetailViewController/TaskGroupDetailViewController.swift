@@ -113,6 +113,10 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         //画面上部のナビゲーションバーの左側にTalkボタンを設置し、押されたらログアウト関数がcallされるようにする
         //let leftButtonItem = UIBarButtonItem(title: "Talk", style: .done, target: self, action: #selector(talkView))
         //navigationItem.leftBarButtonItem = leftButtonItem
+        
+        //画面上部のナビゲーションバーの右側に写真投稿ボタンを設置し、押されたら画面遷移されるようにする
+        let rightButtonItem = UIBarButtonItem(title: "写真", style: .done, target: self, action: #selector(postPhoto))
+        navigationItem.rightBarButtonItem = rightButtonItem
     }
     
     // 画面の向きが変わった時に呼ばれる
@@ -121,9 +125,11 @@ class TaskGroupDetailViewController: UIViewController, UITableViewDelegate, UITa
         self.cofigureBackgroundImage()          // 背景画像再設定
     }
     
-    // Talkボタンをタップしたときの動作
-    @objc func talkView() {
-        let vc = TaskGroupViewController()
+    // 写真ボタンをタップしたときの動作
+    @objc func postPhoto() {
+        let vc = taskPostPhotoViewController()
+        vc.groupId = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId
+        
         navigationController?.pushViewController(vc, animated: true)
     }
     
