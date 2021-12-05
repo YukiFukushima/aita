@@ -116,6 +116,15 @@ class ViewController: UIViewController, UserInfoDelegate{
     
     //CloudStorageからダウンロードしてくる関数
     func downloadFromCloudStorage(userRef:StorageReference){
+        //画像の表示
+        userRef.downloadURL { (url, error) in
+            guard let url = url else {return}
+            self.nameImageView.sd_setImage(with: url, placeholderImage: nil, options: SDWebImageOptions.refreshCached, context: nil)
+            //読み込み(プロフィールの編集に渡す時の為にLocalに保存)
+            self.localNameImageView = self.nameImageView
+        }
+        
+        /*
         //placeholderの役割を果たす画像をセット
         //let placeholderImage = UIImage(systemName: "photo")
         
@@ -124,6 +133,7 @@ class ViewController: UIViewController, UserInfoDelegate{
         
         //読み込み(プロフィールの編集に渡す時の為にLocalに保存)
         localNameImageView = nameImageView
+        */
     }
     
     //チュートリアル画面の表示関数
