@@ -14,7 +14,7 @@ import FirebaseStorage
 import FirebaseUI
 import RAMPaperSwitch
 
-class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UserInfoDelegate {
+class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, GroupInfoDelegate, UserInfoDelegate,UIGestureRecognizerDelegate {
     
     @IBOutlet weak var taskMikkeTableView: UITableView!
     @IBOutlet weak var currentUserStatus: UILabel!
@@ -187,6 +187,13 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         //ハイライト効果を削除(タッチした時にグレーにするのをやめる)
         cell.selectionStyle = .none
         
+        /* グループメンバー追加画像タップ時イベント設定(テーブルタップに変更してみる？2021.12.22) */
+        /*
+        cell.userPostImageView.isUserInteractionEnabled = true
+        cell.userPostImageView.tag = indexPath.row
+        cell.userPostImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(userPostImageIconTapped)))
+        */
+        
         //名前の表示
         viewName(userName:userName, userNameLabel:cell.userNameLabel, isCurrentUser:false)
         
@@ -205,17 +212,25 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         //一言メッセージの表示
         cell.userDetailStatusLabel.text = userDetailStatus
         
-        /* グループメンバー追加画像タップ時イベント設定 */
-        cell.userPostImageView.isUserInteractionEnabled = true
-        cell.userPostImageView.tag = indexPath.row
-        cell.userPostImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(userPostImageIconTapped)))
-        
         return cell
     }
     
-    /* ユーザー投稿確認アイコンがクリックされた時にCallされる関数 */
+    /* タップ時処理 */
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = taskConfirmUserPhotoViewController()
+        
+        let groupId:String = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId
+        let tappedUserId:String = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).GroupMemberNamesInfo[indexPath.row].groupMemberNames
+        
+        vc.groupId = groupId
+        vc.userId = tappedUserId
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    /* ユーザー投稿確認アイコンがクリックされた時にCallされる関数(テーブルタップに変更した場合不要 2021.12.22) */
     @objc func userPostImageIconTapped(sender:UITapGestureRecognizer){
         guard let inputRow=sender.view?.tag else {return}
+        
         let vc = taskConfirmUserPhotoViewController()
         
         let groupId:String = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId
@@ -567,5 +582,15 @@ class TaskMikkeViewController: UIViewController, UITableViewDelegate, UITableVie
         //if getCurrentUserStatusInCurrentGroup()==true{  //Freeになったら通知
             pushStatusChangeToOtherUser()
         //}
+    }
+    
+    //自分の投稿した画像を表示するボタンをタップした時の関数
+    @IBAction func tappedViewMyPhotoBtn(_ sender: Any) {
+        let vc = taskViewMyPhotoViewController()
+        
+        vc.groupId = GroupInfoManager.sharedInstance.getGroupInfo(num: getCurrentGroupNumberFromTappedGroup()).taskId
+        
+        //画面遷移
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

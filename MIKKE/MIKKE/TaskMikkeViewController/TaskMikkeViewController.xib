@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -101,6 +101,18 @@
                                 <constraint firstAttribute="width" constant="50" id="ftP-YN-eOO"/>
                             </constraints>
                         </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9SD-dX-efK">
+                            <rect key="frame" x="325" y="89.666666666666657" width="35" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="35" id="BvF-pq-KiW"/>
+                                <constraint firstAttribute="height" constant="25" id="E7p-Vi-ePN"/>
+                            </constraints>
+                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                            <state key="normal" backgroundImage="cameraMini"/>
+                            <connections>
+                                <action selector="tappedViewMyPhotoBtn:" destination="-1" eventType="touchUpInside" id="YIo-T4-gDo"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -112,6 +124,8 @@
                         <constraint firstItem="sfG-kE-Z81" firstAttribute="leading" secondItem="yms-NV-mq6" secondAttribute="leading" constant="50" id="8IA-t0-UXB"/>
                         <constraint firstItem="maZ-IC-ZNI" firstAttribute="top" secondItem="bkv-IY-PVW" secondAttribute="bottom" constant="7" id="CG2-v1-qQk"/>
                         <constraint firstItem="bkv-IY-PVW" firstAttribute="top" secondItem="sfG-kE-Z81" secondAttribute="bottom" constant="7" id="DxC-es-IvQ"/>
+                        <constraint firstAttribute="trailing" secondItem="9SD-dX-efK" secondAttribute="trailing" constant="10" id="G6T-F3-v7B"/>
+                        <constraint firstItem="maZ-IC-ZNI" firstAttribute="top" secondItem="9SD-dX-efK" secondAttribute="bottom" constant="7" id="GIS-Ha-x2c"/>
                         <constraint firstAttribute="height" constant="150" id="NuY-HF-x1n"/>
                         <constraint firstItem="YT2-aT-L3Y" firstAttribute="top" secondItem="yms-NV-mq6" secondAttribute="top" constant="10" id="PTP-Eo-C0p"/>
                         <constraint firstItem="maZ-IC-ZNI" firstAttribute="leading" secondItem="yms-NV-mq6" secondAttribute="leading" constant="10" id="a9c-FI-yR7"/>
@@ -160,7 +174,7 @@
                 <constraint firstItem="Isf-bK-jby" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="fjX-u1-eK1"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Isf-bK-jby" secondAttribute="bottom" constant="20" id="t9c-wA-1XU"/>
             </constraints>
-            <point key="canvasLocation" x="128.98550724637681" y="131.25"/>
+            <point key="canvasLocation" x="127.69230769230769" y="130.80568720379145"/>
         </view>
     </objects>
     <designables>
@@ -172,11 +186,12 @@
         </designable>
     </designables>
     <resources>
+        <image name="cameraMini" width="35" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
